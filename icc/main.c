@@ -20,8 +20,8 @@ int main(int argc, char *argv[])
         return 0;
     }
     for (int i = 0; i < 4; ++i) {
-        if(re1[i].x == re2_centro.x && re1[i].y == re2_centro.y || re1[i].x == re2_centro.x + largura2 && re1[i].y == re2_centro.y ||
-                re1[i].x == re2_centro.x + largura2 && re1[i].y == re2_centro.y + altura2 || re1[i].x == re2_centro.x && re1[i].y == re2_centro.y) {
+        if((re1[i].x == re2_centro.x && re1[i].y == re2_centro.y) || (re1[i].x == re2_centro.x + largura2 && re1[i].y == re2_centro.y) ||
+                (re1[i].x == re2_centro.x + largura2 && re1[i].y == re2_centro.y + altura2) || (re1[i].x == re2_centro.x && re1[i].y == re2_centro.y)) {
 
             printf("HIT 0 0 0 0\n");
         }
