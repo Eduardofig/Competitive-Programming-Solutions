@@ -16,20 +16,30 @@ int main(int argc, char *argv[])
     re1[2].x = re1[0].x + largura1; re1[2].y = re1[0].y + altura1;
     re1[3].x = re1[0].x; re1[3].y = re1[0].y + altura1;
     if(re1[0].x == re2_centro.x && re1[0].y == re2_centro.y && re1[1].x == re2_centro.x + largura2 && re1[1].y == re2_centro.y + altura2) {
-        printf("\n");
+        printf("HIT: %d %d %d %d\n", re2_centro.x, re2_centro.y, largura2, altura2);
+        return 0;
     }
     for (int i = 0; i < 4; ++i) {
+        if(re1[i].x == re2_centro.x && re1[i].y == re2_centro.y || re1[i].x == re2_centro.x + largura2 && re1[i].y == re2_centro.y ||
+                re1[i].x == re2_centro.x + largura2 && re1[i].y == re2_centro.y + altura2 || re1[i].x == re2_centro.x && re1[i].y == re2_centro.y) {
+
+            printf("HIT 0 0 0 0\n");
+        }
         if(re1[i].x > re2_centro.x && re1[i].x < re2_centro.x + largura2 && re1[i].y > re2_centro.y && re1[i].y < re2_centro.y + altura2) {
             switch(i)
             {
+                case 0:
+                    printf("HIT: %d %d %d %d\n", re1[i].x, re1[i].y, re2_centro.x + largura2 - re1[0].x, re2_centro.y + altura2 - re1[0].x);
+                    return 0;
                 case 1:
-                    break;
+                    printf("HIT: %d %d %d %d\n", re2_centro.x, re1[i].y, re1[i].x - re2_centro.x, re2_centro.y - re1[i].y);
+                    return 0;
                 case 2:
-                    break;
-                case 3:
-                    break;
+                    printf("HIT: %d %d %d %d\n", re2_centro.x, re2_centro.y, re1[i].x - re2_centro.x, re1[i].y - re2_centro.y);
+                    return 0;
                 default:
-                    break;
+                    printf("HIT: %d %d %d %d\n", re1[i].x, re2_centro.y, re2_centro.x + largura2 - re1[i].x, re1[i].y - re2_centro.y);
+                    return 0;
 
             }
         }
