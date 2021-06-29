@@ -1,50 +1,58 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-typedef struct 
+int funcao_comparacao (const void * a, const void * b) {
+   return (*(int*)a - *(int*)b);
+}
+
+int moda(int *numeros)
 {
-    int x, y;
-}ponto;
+    //Ordenacao do array
+    qsort(numeros, 10, sizeof(int), funcao_comparacao);
+    int moda = numeros[0], atual = numeros[0], contagem_moda = 0, contagem_atual = 0;
+
+    for(int i = 0; i < 10; ++i) {
+        //Se o numero eh diferente do atual, atualiza o atual e a contagem_atual fica zero
+        if(numeros[i] != atual) {
+            atual = numeros[i];
+            contagem_atual = 0;
+        }
+        //Se o numero atual eh mais recorrente que a moda, a moda vira o atual
+        if(contagem_atual > contagem_moda) {
+            contagem_moda = contagem_atual;
+            moda = atual;
+        }
+        contagem_atual++;
+    }
+
+    return moda;
+}
+
+int maior(int *numeros)
+{
+    int res = numeros[0];
+    for(int i = 1; i < 10; ++i) if(numeros[i] > res) res = numeros[i];
+    return res;
+}
+
+int menor(int *numeros) 
+{
+    int res = numeros[0];
+    for(int i = 1; i < 10; ++i) if(numeros[i] < res) res = numeros[i];
+    return res;
+}
+
+float media(int *numeros)
+{
+    float res = 0;
+    for(int i = 0; i < 10; ++i) res += numeros[i];
+    return res/10;
+}
 
 int main(int argc, char *argv[])
 {
-    //Declaracao das variaveis
-    ponto re1[4], re2_centro;
-    int altura1, altura2, largura1, largura2;
-    //Leitura das variaveis
-    scanf("%d %d %d %d %d %d %d %d", &re1[0].x, &re1[0].y, &largura1, &altura1, &re2_centro.x, &re2_centro.y, &largura2, &altura2); 
-    re1[1].x = re1[0].x + largura1; re1[1].y = re1[0].y;
-    re1[2].x = re1[0].x + largura1; re1[2].y = re1[0].y + altura1;
-    re1[3].x = re1[0].x; re1[3].y = re1[0].y + altura1;
-    if(re1[0].x == re2_centro.x && re1[0].y == re2_centro.y && re1[1].x == re2_centro.x + largura2 && re1[1].y == re2_centro.y + altura2) {
-        printf("HIT: %d %d %d %d\n", re2_centro.x, re2_centro.y, largura2, altura2);
-        return 0;
-    }
-    for (int i = 0; i < 4; ++i) {
-        if((re1[i].x == re2_centro.x && re1[i].y == re2_centro.y) || (re1[i].x == re2_centro.x + largura2 && re1[i].y == re2_centro.y) ||
-                (re1[i].x == re2_centro.x + largura2 && re1[i].y == re2_centro.y + altura2) || (re1[i].x == re2_centro.x && re1[i].y == re2_centro.y)) {
-
-            printf("HIT 0 0 0 0\n");
-        }
-        if(re1[i].x > re2_centro.x && re1[i].x < re2_centro.x + largura2 && re1[i].y > re2_centro.y && re1[i].y < re2_centro.y + altura2) {
-            switch(i)
-            {
-                case 0:
-                    printf("HIT: %d %d %d %d\n", re1[i].x, re1[i].y, re2_centro.x + largura2 - re1[0].x, re2_centro.y + altura2 - re1[0].x);
-                    return 0;
-                case 1:
-                    printf("HIT: %d %d %d %d\n", re2_centro.x, re1[i].y, re1[i].x - re2_centro.x, re2_centro.y - re1[i].y);
-                    return 0;
-                case 2:
-                    printf("HIT: %d %d %d %d\n", re2_centro.x, re2_centro.y, re1[i].x - re2_centro.x, re1[i].y - re2_centro.y);
-                    return 0;
-                default:
-                    printf("HIT: %d %d %d %d\n", re1[i].x, re2_centro.y, re2_centro.x + largura2 - re1[i].x, re1[i].y - re2_centro.y);
-                    return 0;
-
-            }
-        }
-    }
-    printf("MISS\n");
+    int numeros[10];
+    for(int i = 0; i < 10; ++i) scanf("%d", numeros + i);
+    printf("%d %d %.2f %d\n", maior(numeros), menor(numeros), media(numeros), moda(numeros));
     return 0;
-    //Impressao do resultado
 }
