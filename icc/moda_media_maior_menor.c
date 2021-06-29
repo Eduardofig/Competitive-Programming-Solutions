@@ -30,23 +30,23 @@ int moda(int *numeros)
 
 int maior(int *numeros)
 {
-    int res = numeros[0];
-    for(int i = 1; i < 10; ++i) if(numeros[i] > res) res = numeros[i];
-    return res;
+    int maior = numeros[0];
+    for(int i = 1; i < 10; ++i) if(numeros[i] > maior) maior = numeros[i];
+    return maior;
 }
 
 int menor(int *numeros) 
 {
-    int res = numeros[0];
-    for(int i = 1; i < 10; ++i) if(numeros[i] < res) res = numeros[i];
-    return res;
+    int menor = numeros[0];
+    for(int i = 1; i < 10; ++i) if(numeros[i] < menor) menor = numeros[i];
+    return menor;
 }
 
 float media(int *numeros)
 {
-    float res = 0;
-    for(int i = 0; i < 10; ++i) res += numeros[i];
-    return res/10;
+    float media = 0;
+    for(int i = 0; i < 10; ++i) media += numeros[i];
+    return media/10;
 }
 
 int main(int argc, char *argv[])
