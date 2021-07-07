@@ -20,7 +20,8 @@ void trocar_particulas(char *elemento_1, char *elemento_2)
 }
 
 //Funcao que processa a particula de agua
-void processar_agua(int posicao_i, int posicao_j, char tela[ALTURA_MATRIZ][LARGURA_MATRIZ], char copia[ALTURA_MATRIZ][LARGURA_MATRIZ])
+void processar_agua(int posicao_i, int posicao_j, char tela[ALTURA_MATRIZ][LARGURA_MATRIZ],
+        char copia[ALTURA_MATRIZ][LARGURA_MATRIZ])
 {
     int direcoes_agua[5][2] = {
         {1, 0},
@@ -46,7 +47,8 @@ void processar_agua(int posicao_i, int posicao_j, char tela[ALTURA_MATRIZ][LARGU
 }
 
 //Funcao que processa a particula de areia
-void processar_areia(int posicao_i, int posicao_j, char tela[ALTURA_MATRIZ][LARGURA_MATRIZ], char copia[ALTURA_MATRIZ][LARGURA_MATRIZ])
+void processar_areia(int posicao_i, int posicao_j, char tela[ALTURA_MATRIZ][LARGURA_MATRIZ],
+        char copia[ALTURA_MATRIZ][LARGURA_MATRIZ])
 {
     int direcoes_areia[3][2] = {
         {1, 0},
@@ -89,7 +91,8 @@ void engine(char tela[ALTURA_MATRIZ][LARGURA_MATRIZ], char copia[ALTURA_MATRIZ][
     }
 }
 
-void imprimir_matriz_e_calcular_fisica(char tela[ALTURA_MATRIZ][LARGURA_MATRIZ], char copia[ALTURA_MATRIZ][LARGURA_MATRIZ], size_t tam)
+void imprimir_matriz_e_calcular_fisica(char tela[ALTURA_MATRIZ][LARGURA_MATRIZ],
+        char copia[ALTURA_MATRIZ][LARGURA_MATRIZ], size_t tam)
 {
 
     //Copia a matriz copia para a matriz tela
