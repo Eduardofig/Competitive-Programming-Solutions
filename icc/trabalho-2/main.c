@@ -9,7 +9,7 @@
 
 int checar_se_esta_inbounds(int posicao_i, int posicao_j, int dimensao_m_matriz, int dimensao_n_matriz)
 {
-    return (posicao_i < dimensao_m_matriz && posicao_j < dimensao_n_matriz);
+    return (posicao_i >= 0 && posicao_i < dimensao_m_matriz && posicao_j >= 0 && posicao_j < dimensao_n_matriz);
 }
 
 int contar_vizinhos_vivos(int modelo, char **matriz, int dimensao_m_matriz, int dimensao_n_matriz,
