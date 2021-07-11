@@ -7,6 +7,11 @@
 #define VIVA '#'
 #define MORTA '.'
 
+int checar_se_esta_inbounds(int posicao_i, int posicao_j, int dimensao_m_matriz, int dimensao_n_matriz)
+{
+    return (posicao_i < dimensao_m_matriz && posicao_j < dimensao_n_matriz);
+}
+
 void checar_numero_de_vizinhos(int modelo, char **matriz, int dimensao_m_matriz, int dimensao_n_matriz,
         int posicao_i, int posicao_j, int *n_vizinhos_vivos)
 {
@@ -18,14 +23,20 @@ void checar_numero_de_vizinhos(int modelo, char **matriz, int dimensao_m_matriz,
         {0, -1},
         {1, -1},
         {-1, -1}
-    };
+    },
+        posicao_i_vizinho, posicao_j_vizinho;
 
     switch(modelo) {
         case MOORE:
             //Itera por todos os vizinhos que estao na soma dos vetores a posicao atual
             for(int i = 0; i < 6; ++i) {
-                if(matriz[posicao_i + vetores_moore[i][0]][posicao_j + vetores_moore[i][1]] == '#') 
-                    ++(*n_vizinhos_vivos);
+                posicao_i_vizinho = posicao_i + vetores_moore[i][0];
+                posicao_j_vizinho = posicao_j + vetores_moore[i][1];
+
+                if(checar_se_esta_inbounds(posicao_i_vizinho, posicao_j_vizinho, dimensao_m_matriz, dimensao_n_matriz)) {
+                    if(matriz[posicao_i_vizinho][posicao_j_vizinho] == '#') 
+                        ++(*n_vizinhos_vivos);
+                }
             }
 
             break;
@@ -50,8 +61,6 @@ void checar_numero_de_vizinhos(int modelo, char **matriz, int dimensao_m_matriz,
 void eval(char **M, char **copia, int m, int n, size_t tam)
 {
     int n_vizinhos_vivos;
-
-    memcpy(copia, M, tam);
 
     for(int i = 0; i < m; ++i) {
         for(int j = 0; j < n; ++j) {
@@ -86,5 +95,6 @@ int main(int argc, char *argv[])
             scanf("%c", M[i] + j);
         }
     }
+
     return 0;
 }
