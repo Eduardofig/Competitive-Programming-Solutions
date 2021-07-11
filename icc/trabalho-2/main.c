@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define VON_NEUMANN 0
-#define MOORE 1
+#define VON_NEUMANN 'N'
+#define MOORE 'M'
 #define VIVA '#'
 #define MORTA '.'
 
@@ -12,7 +12,7 @@ int checar_se_esta_inbounds(int posicao_i, int posicao_j, int dimensao_m_matriz,
     return (posicao_i >= 0 && posicao_i < dimensao_m_matriz && posicao_j >= 0 && posicao_j < dimensao_n_matriz);
 }
 
-int contar_vizinhos_vivos(int modelo, char **matriz, int dimensao_m_matriz, int dimensao_n_matriz,
+int contar_vizinhos_vivos(char modelo, char **matriz, int dimensao_m_matriz, int dimensao_n_matriz,
         int posicao_i, int posicao_j)
 {
     int vetores_moore[6][2] = {
@@ -58,13 +58,14 @@ int contar_vizinhos_vivos(int modelo, char **matriz, int dimensao_m_matriz, int 
     return n_vizinhos_vivos;
 }
 
-void avaliar_geracao(char **matriz, char **copia, int dimensao_m_matriz, int dimensao_n_matriz, size_t tamanho_matriz)
+void avaliar_geracao(char **matriz, char **copia, char modelo, int dimensao_m_matriz, int dimensao_n_matriz,
+        size_t tamanho_matriz)
 {
     int n_vizinhos_vivos;
 
     for(int i = 0; i < dimensao_m_matriz; ++i) {
         for(int j = 0; j < dimensao_n_matriz; ++j) {
-            n_vizinhos_vivos = contar_vizinhos_vivos(VON_NEUMANN, matriz, dimensao_m_matriz, dimensao_n_matriz, i, j);
+            n_vizinhos_vivos = contar_vizinhos_vivos(modelo, matriz, dimensao_m_matriz, dimensao_n_matriz, i, j);
 
             if(matriz[i][j] == VIVA) {
                 if(n_vizinhos_vivos < 2 || n_vizinhos_vivos > 3)
@@ -78,22 +79,45 @@ void avaliar_geracao(char **matriz, char **copia, int dimensao_m_matriz, int dim
     memcpy(matriz, copia, tamanho_matriz);
 }
 
+void imprimir_matriz(char **matriz, int dimensao_m_matriz, int dimensao_n_matriz)
+{
+    for(int i = 0; i < dimensao_m_matriz; ++i) {
+        for(int j = 0; j < dimensao_n_matriz; ++j) {
+            printf("%d ", matriz[i][j]);
+        }
+        printf("\n");
+    }
+}
+
 int main(int argc, char *argv[])
 {
     int m, n, p;
+    char v;
 
-    scanf("%d %d %d", &m, &n, &p);
+    scanf("%d %d %d %c", &m, &n, &p, &v);
 
     if(m <= 0 || n <= 0 || p <= 0) {
         printf("Dados da entrada apresentam erro.\n");
     }
 
-    char M[m][n], copia[m][n];
+    char **M = (char**)malloc(sizeof(char*)*m), **copia = (char**)malloc(sizeof(char*)*m);
+
+    for(int i = 0; i < m; ++i) {
+        M[i] = (char*)malloc(sizeof(char)*n);
+        copia[i] = (char*)malloc(sizeof(char)*n);
+    }
 
     for(int i = 0; i < m; ++i) {
         for(int j = 0; j < n; ++j) {
             scanf("%c", M[i] + j);
         }
+    }
+
+    memcpy(copia, M, sizeof(char)*m*n);
+
+    for(int i = 0; i < p; ++i) {
+        imprimir_matriz(M, m, n);
+        avaliar_geracao(M, copia, m, n, v, sizeof(char)*m*n);
     }
 
     return 0;
