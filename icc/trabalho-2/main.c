@@ -98,6 +98,7 @@ int main(int argc, char *argv[])
 
     if(m <= 0 || n <= 0 || p <= 0) {
         printf("Dados da entrada apresentam erro.\n");
+        exit(0);
     }
 
     char **M = (char**)malloc(sizeof(char*)*m), **copia = (char**)malloc(sizeof(char*)*m);
@@ -119,6 +120,13 @@ int main(int argc, char *argv[])
         imprimir_matriz(M, m, n);
         avaliar_geracao(M, copia, m, n, v, sizeof(char)*m*n);
     }
+
+    for(int i = 0; i < m; ++i) {
+        free(M[i]);
+        free(copia[i]);
+    }
+    free(M);
+    free(copia);
 
     return 0;
 }
