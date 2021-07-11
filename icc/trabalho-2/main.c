@@ -12,10 +12,9 @@ int checar_se_esta_inbounds(int posicao_i, int posicao_j, int dimensao_m_matriz,
     return (posicao_i < dimensao_m_matriz && posicao_j < dimensao_n_matriz);
 }
 
-void checar_numero_de_vizinhos(int modelo, char **matriz, int dimensao_m_matriz, int dimensao_n_matriz,
-        int posicao_i, int posicao_j, int *n_vizinhos_vivos)
+int contar_vizinhos_vivos(int modelo, char **matriz, int dimensao_m_matriz, int dimensao_n_matriz,
+        int posicao_i, int posicao_j)
 {
-    *n_vizinhos_vivos = 0;
     int vetores_moore[6][2] = {
         {0, 1},
         {1, 1},
@@ -24,7 +23,7 @@ void checar_numero_de_vizinhos(int modelo, char **matriz, int dimensao_m_matriz,
         {1, -1},
         {-1, -1}
     },
-        posicao_i_vizinho, posicao_j_vizinho;
+    posicao_i_vizinho, posicao_j_vizinho, n_vizinhos_vivos = 0;
 
     switch(modelo) {
         case MOORE:
@@ -35,7 +34,7 @@ void checar_numero_de_vizinhos(int modelo, char **matriz, int dimensao_m_matriz,
 
                 if(checar_se_esta_inbounds(posicao_i_vizinho, posicao_j_vizinho, dimensao_m_matriz, dimensao_n_matriz)) {
                     if(matriz[posicao_i_vizinho][posicao_j_vizinho] == '#') 
-                        ++(*n_vizinhos_vivos);
+                        ++n_vizinhos_vivos;
                 }
             }
 
@@ -45,28 +44,29 @@ void checar_numero_de_vizinhos(int modelo, char **matriz, int dimensao_m_matriz,
             //Avalia todos os vizinhos na vertical
             for(int i = 0; i < dimensao_m_matriz; ++i) {
                 if(i != posicao_i || matriz[i][posicao_j] == VIVA)
-                    ++(*n_vizinhos_vivos);
+                    ++n_vizinhos_vivos;
             }
 
             //Avalia todos os vizinhos na horizontal
             for(int j = 0; j < dimensao_n_matriz; ++j) {
                 if(j != posicao_j || matriz[posicao_i][j] == VIVA) 
-                    ++(*n_vizinhos_vivos);
+                    ++n_vizinhos_vivos;
             }
 
             break;
     }
+    return n_vizinhos_vivos;
 }
 
-void eval(char **M, char **copia, int m, int n, size_t tam)
+void avaliar_geracao(char **matriz, char **copia, int dimensao_m_matriz, int dimensao_n_matriz, size_t tamanho_matriz)
 {
     int n_vizinhos_vivos;
 
-    for(int i = 0; i < m; ++i) {
-        for(int j = 0; j < n; ++j) {
-            checar_numero_de_vizinhos(VON_NEUMANN, M, m, n, i, j, &n_vizinhos_vivos);
+    for(int i = 0; i < dimensao_m_matriz; ++i) {
+        for(int j = 0; j < dimensao_n_matriz; ++j) {
+            n_vizinhos_vivos = contar_vizinhos_vivos(VON_NEUMANN, matriz, dimensao_m_matriz, dimensao_n_matriz, i, j);
 
-            if(M[i][j] == VIVA) {
+            if(matriz[i][j] == VIVA) {
                 if(n_vizinhos_vivos < 2 || n_vizinhos_vivos > 3)
                     copia[i][j] = MORTA;
             } else {
@@ -75,7 +75,7 @@ void eval(char **M, char **copia, int m, int n, size_t tam)
         }
     }
 
-    memcpy(M, copia, tam);
+    memcpy(matriz, copia, tamanho_matriz);
 }
 
 int main(int argc, char *argv[])
