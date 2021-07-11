@@ -26,7 +26,7 @@ int contar_vizinhos_vivos(char modelo, char **matriz, int dimensao_m_matriz, int
         {1, 0},
         {-1, 0}
     },
-    posicao_i_vizinho, posicao_j_vizinho, n_vizinhos_vivos = 0;
+        posicao_i_vizinho, posicao_j_vizinho, n_vizinhos_vivos = 0;
 
     switch(modelo) {
         case MOORE:
@@ -79,7 +79,10 @@ void avaliar_geracao(char **matriz, char **copia, char modelo, int dimensao_m_ma
                     copia[i][j] = MORTA;
                 }
             } else {
-                if(n_vizinhos_vivos == 3) copia[i][j] = VIVA;
+                if(n_vizinhos_vivos == 3) {
+                    printf("viver: [%d][%d]\n", i, j);
+                    copia[i][j] = VIVA;
+                }
             }
         }
     }
@@ -119,19 +122,19 @@ int main(int argc, char *argv[])
 
     memcpy(copia, M, sizeof(char)*m*n);
 
+    imprimir_matriz(M, m, n);
     for(int i = 0; i < p; ++i) {
         /*system("clear");*/
-        printf("\n");
-        printf("frame %d\n", i);
         avaliar_geracao(M, copia, v, m, n, sizeof(char)*m*n);
+        printf("\n");
         imprimir_matriz(M, m, n);
         /*usleep(800000);*/
     }
-    imprimir_matriz(M, m, n);
+    printf("final.\n");
 
     /*for(int i = 0; i < m; ++i) {*/
-        /*free(M[i]);*/
-        /*free(copia[i]);*/
+    /*free(M[i]);*/
+    /*free(copia[i]);*/
     /*}*/
     /*free(M);*/
     /*free(copia);*/
