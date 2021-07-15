@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 //Struct para armazenamento da musica
 typedef struct
@@ -126,6 +127,52 @@ void exibir_playlist(playlist *p) {
         printf("Artista: %s\n", p->musicas[i]->nome_do_artista);
         printf("Duracao: %d segundos\n\n", p->musicas[i]->tempo_de_duracao);
     }
+}
+
+void escrever_cabecalho_playlist(playlist *p, FILE *binario)
+{
+    if(!p) return;
+
+    int tam_nome = strlen(p->nome_da_playlist);
+
+    fseek(binario, 0, SEEK_SET);
+    fwrite(&tam_nome, sizeof(int), 1, binario);
+    fwrite(p->nome_da_playlist, sizeof(char), tam_nome, binario);
+    fwrite(&(p->n_de_musicas), sizeof(int), 1, binario);
+}
+
+void escrever_musica_playlist(musica *m, FILE *binario)
+{
+    if(!m) return;
+
+    int tam_nome_musica = strlen(m->nome_da_musica),
+        tam_nome_artista = strlen(m->nome_do_artista);
+
+    fwrite(&tam_nome_musica, sizeof(int), 1, binario) ;
+    fwrite(m->nome_da_musica, sizeof(char), tam_nome_musica, binario);
+    fwrite(&tam_nome_artista, sizeof(int), tam_nome_artista, binario);
+    fwrite(m->nome_do_artista, sizeof(char), tam_nome_artista, binario);
+    fwrite(&(m->tempo_de_duracao), sizeof(unsigned int), 1, binario);
+}
+
+playlist *ler_playlist(FILE *binario)
+{
+    playlist *p = malloc(sizeof(playlist));
+    
+    fseek(binario, 0, SEEK_SET);
+
+    int tam_nome_playlist, tam_nome_musica, tam_nome_artista;
+    
+    fread(&tam_nome_playlist, sizeof(int), 1, binario);
+    p->nome_da_playlist = malloc(sizeof(char)*tam_nome_playlist);
+    fread(p->nome_da_playlist, sizeof(char), tam_nome_playlist, binario);
+    fread(&(p->n_de_musicas), sizeof(int), 1, binario);
+
+    for(int i = 0; i < p->n_de_musicas; ++i) {
+        //ler musicas
+    }
+
+    return p;
 }
 
 int main(int argc, char *argv[])
