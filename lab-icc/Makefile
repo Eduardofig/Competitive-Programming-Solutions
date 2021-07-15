@@ -1,4 +1,4 @@
-all: main.c
-	gcc main.c -o main
+all: sobrenome.c
+	gcc sobrenome.c -o main
 run: main
 	./main
