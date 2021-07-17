@@ -150,7 +150,7 @@ void escrever_musica_playlist(musica *m, FILE *binario)
 
     fwrite(&tam_nome_musica, sizeof(int), 1, binario);
     fwrite(m->nome_da_musica, sizeof(char), tam_nome_musica, binario);
-    fwrite(&tam_nome_artista, sizeof(int), tam_nome_artista, binario);
+    fwrite(&tam_nome_artista, sizeof(int), 1, binario);
     fwrite(m->nome_do_artista, sizeof(char), tam_nome_artista, binario);
     fwrite(&(m->tempo_de_duracao), sizeof(unsigned int), 1, binario);
 }
@@ -243,7 +243,7 @@ void carregar_playlist(playlist **p)
 
     if(!binario) {
         printf("Arquivo %s nao existe.\n", nome_binario);
-        return;
+        exit(0);
     }
 
     if(*p) apagar_playlist(p);
