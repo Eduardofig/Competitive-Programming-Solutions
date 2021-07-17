@@ -183,7 +183,7 @@ playlist *ler_playlist(FILE *binario)
         p->musicas[i]->nome_do_artista[tam_nome_artista] = 0;
 
         //Leitura da duracao da musica
-        fread(&(p->musicas[i]->tempo_de_duracao), sizeof(char), 1, binario);
+        fread(&(p->musicas[i]->tempo_de_duracao), sizeof(unsigned int), 1, binario);
     }
 
     return p;
@@ -202,6 +202,7 @@ void salvar_playlist(playlist *p)
         escrever_musica_playlist(p->musicas[i], binario);
 
     fclose(binario);
+    printf("Playlist %s salva com sucesso.\n", p->nome_da_playlist);
 }
 
 void carregar_playlist(playlist **p)
@@ -211,8 +212,15 @@ void carregar_playlist(playlist **p)
 
     FILE *binario = fopen(nome_binario, "rb+");
 
+    if(!binario) {
+        printf("Arquivo %s nao existe.\n", nome_binario);
+        return;
+    }
+
     if(*p) apagar_playlist(p);
+
     *p = ler_playlist(binario);
+    printf("Playlist %s carregada com sucesso.\n", (*p)->nome_da_playlist);
 }
 
 int main(int argc, char *argv[])
