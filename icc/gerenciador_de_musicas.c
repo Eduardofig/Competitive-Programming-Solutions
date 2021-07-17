@@ -185,7 +185,7 @@ playlist *ler_playlist(FILE *binario)
 
     fseek(binario, 0, SEEK_SET);
 
-    int tam_nome_playlist, tam_nome_musica, tam_nome_artista;
+    int tam_nome_playlist;
 
     //Leitura do cabecalho
     fread(&tam_nome_playlist, sizeof(int), 1, binario);
