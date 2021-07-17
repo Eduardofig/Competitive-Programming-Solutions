@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int $ = 0;
+
 char *read_token(char *delimitadores)
 {
     size_t tamanho_da_linha = sizeof(char);
@@ -10,6 +12,7 @@ char *read_token(char *delimitadores)
         for(int j = 0; delimitadores[j] != 0; ++j) {
             if(c == delimitadores[j]) {
                 if(c == '\r') scanf("%c", &c);
+                if(c == '$') $ = 1;
                 linha[i] = 0;
                 return linha;
             }
@@ -54,6 +57,10 @@ int main(int argc, char *argv[])
     int ultima_posicao = 0;
     nome = read_token(" $");
     while(append_nome(nome, &lista_de_nomes, &ultima_posicao)) {
+        if($) {
+            $ ^= 1;
+            break;
+        }
         nome = read_token(" $");
     }
 
