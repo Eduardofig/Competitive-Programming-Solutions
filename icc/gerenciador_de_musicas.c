@@ -169,7 +169,11 @@ playlist *ler_playlist(FILE *binario)
     fread(&(p->n_de_musicas), sizeof(int), 1, binario);
 
     for(int i = 0; i < p->n_de_musicas; ++i) {
-        //ler musicas
+        fread(&tam_nome_musica, sizeof(int), 1, binario);
+        fread(p->musicas[i]->nome_da_musica, sizeof(char), tam_nome_musica, binario);
+        fread(&tam_nome_artista, sizeof(int), 1, binario);
+        fread(p->musicas[i]->nome_do_artista, sizeof(char), tam_nome_artista, binario);
+        fread(&(p->musicas[i]->tempo_de_duracao), sizeof(char), 1, binario);
     }
 
     return p;
