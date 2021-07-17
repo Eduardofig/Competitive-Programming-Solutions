@@ -54,7 +54,7 @@ bool checar_palindromo_indireto(char *palavra, int i, int j)
 
     //recursao
     if(!isalnum(palavra[i])) return checar_palindromo_indireto(palavra, i + 1, j);
-    if(!isalnum(palavra[j])) return checar_palindromo_indireto(palavra, i, j + 1);
+    if(!isalnum(palavra[j])) return checar_palindromo_indireto(palavra, i, j - 1);
 
     //outro caso base
     if(palavra[i] != palavra[j] && abs(palavra[i] - palavra[j]) != SHIFT_MAIUSCULO) return FALSE;
