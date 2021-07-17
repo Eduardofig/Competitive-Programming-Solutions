@@ -155,39 +155,46 @@ void escrever_musica_playlist(musica *m, FILE *binario)
     fwrite(&(m->tempo_de_duracao), sizeof(unsigned int), 1, binario);
 }
 
+musica *ler_musica(FILE *binario)
+{
+    musica *m = (musica*)malloc(sizeof(musica));
+
+    int tam_nome_musica, tam_nome_artista;
+
+    //Leitura do nome da musica
+    fread(&tam_nome_musica, sizeof(int), 1, binario);
+    m->nome_da_musica = (char*)malloc(sizeof(char)*(tam_nome_musica + 1));
+    fread(m->nome_da_musica, sizeof(char), tam_nome_musica, binario);
+    m->nome_da_musica[tam_nome_musica] = 0;
+
+    //Leitura do nome do artista
+    fread(&tam_nome_artista, sizeof(int), 1, binario);
+    m->nome_do_artista = (char*)malloc(sizeof(char)*(tam_nome_artista + 1));
+    fread(m->nome_do_artista, sizeof(char), tam_nome_artista, binario);
+    m->nome_do_artista[tam_nome_artista] = 0;
+
+    //Leitura da duracao da musica
+    fread(&(m->tempo_de_duracao), sizeof(unsigned int), 1, binario);
+
+    return m;
+}
+
 playlist *ler_playlist(FILE *binario)
 {
     playlist *p = malloc(sizeof(playlist));
-    
+
     fseek(binario, 0, SEEK_SET);
 
     int tam_nome_playlist, tam_nome_musica, tam_nome_artista;
-    
+
     //Leitura do cabecalho
     fread(&tam_nome_playlist, sizeof(int), 1, binario);
     p->nome_da_playlist = malloc(sizeof(char)*tam_nome_playlist);
     fread(p->nome_da_playlist, sizeof(char), tam_nome_playlist, binario);
     fread(&(p->n_de_musicas), sizeof(int), 1, binario);
 
-    for(int i = 0; i < p->n_de_musicas; ++i) {
-
-        p->musicas[i] = (musica*)malloc(sizeof(musica));
-
-        //Leitura do nome da musica
-        fread(&tam_nome_musica, sizeof(int), 1, binario);
-        p->musicas[i]->nome_da_musica = (char*)malloc(sizeof(char)*(tam_nome_musica + 1));
-        fread(p->musicas[i]->nome_da_musica, sizeof(char), tam_nome_musica, binario);
-        p->musicas[i]->nome_da_musica[tam_nome_musica] = 0;
-
-        //Leitura do nome do artista
-        fread(&tam_nome_artista, sizeof(int), 1, binario);
-        p->musicas[i]->nome_do_artista = (char*)malloc(sizeof(char)*(tam_nome_artista + 1));
-        fread(p->musicas[i]->nome_do_artista, sizeof(char), tam_nome_artista, binario);
-        p->musicas[i]->nome_do_artista[tam_nome_artista] = 0;
-
-        //Leitura da duracao da musica
-        fread(&(p->musicas[i]->tempo_de_duracao), sizeof(unsigned int), 1, binario);
-    }
+    for(int i = 0; i < p->n_de_musicas; ++i) 
+        p->musicas[i] = ler_musica(binario);
 
     return p;
 }
