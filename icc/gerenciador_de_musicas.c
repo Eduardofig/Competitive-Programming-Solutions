@@ -1,3 +1,8 @@
+/* 
+ * Nome: Eduardo Figueiredo Freire Andrade
+ * Numero USP: 11232820
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

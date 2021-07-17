@@ -1,5 +1,5 @@
-all: gerenciador_de_musicas.c
-	cc gerenciador_de_musicas.c
-run: a.out
-	./a.out
+all: palindromo.c
+	gcc palindromo.c -fsanitize=address -g -o main
+run: main.out
+	./main
 
