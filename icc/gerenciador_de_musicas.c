@@ -189,6 +189,32 @@ playlist *ler_playlist(FILE *binario)
     return p;
 }
 
+void salvar_playlist(playlist *p)
+{
+    char nome_binario[300];
+    scanf("%s", nome_binario);
+
+    FILE *binario = fopen(nome_binario, "wb+");
+
+    escrever_cabecalho_playlist(p, binario);
+
+    for(int i = 0; i < p->n_de_musicas; ++i) 
+        escrever_musica_playlist(p->musicas[i], binario);
+
+    fclose(binario);
+}
+
+void carregar_playlist(playlist **p)
+{
+    char nome_binario[300];
+    scanf("%s", nome_binario);
+
+    FILE *binario = fopen(nome_binario, "rb+");
+
+    if(*p) apagar_playlist(p);
+    *p = ler_playlist(binario);
+}
+
 int main(int argc, char *argv[])
 {
     playlist *p = criar_playlist();
@@ -207,6 +233,12 @@ int main(int argc, char *argv[])
                 break;
             case 4:
                 retroceder_de_musica(p);
+                break;
+            case 5:
+                salvar_playlist(p);
+                break;
+            case 6:
+                carregar_playlist(&p);
                 break;
             default:
                 apagar_playlist(&p);
