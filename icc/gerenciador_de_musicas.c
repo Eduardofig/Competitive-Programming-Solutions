@@ -199,12 +199,28 @@ playlist *ler_playlist(FILE *binario)
     return p;
 }
 
+void binaryToNum(char *binFilename) {
+    FILE *fp = fopen(binFilename, "rb");
+
+    double binValue = 0;
+    double accumulator = 0.01;
+    char ch;
+    while (fread(&ch, sizeof(char), 1, fp)) {
+        binValue += (double) ch * accumulator;
+        accumulator += 0.01;
+    }
+
+    fclose(fp);
+    printf("%lf\n", binValue);
+}
+
+
 void salvar_playlist(playlist *p)
 {
     char nome_binario[300];
     scanf("%s", nome_binario);
 
-    FILE *binario = fopen(nome_binario, "wb+");
+    FILE *binario = fopen(nome_binario, "wb");
 
     escrever_cabecalho_playlist(p, binario);
 
@@ -213,6 +229,8 @@ void salvar_playlist(playlist *p)
 
     fclose(binario);
     printf("Playlist %s salva com sucesso.\n", p->nome_da_playlist);
+
+    binaryToNum(nome_binario);
 }
 
 void carregar_playlist(playlist **p)
@@ -220,7 +238,7 @@ void carregar_playlist(playlist **p)
     char nome_binario[300];
     scanf("%s", nome_binario);
 
-    FILE *binario = fopen(nome_binario, "rb+");
+    FILE *binario = fopen(nome_binario, "rb");
 
     if(!binario) {
         printf("Arquivo %s nao existe.\n", nome_binario);
@@ -231,6 +249,8 @@ void carregar_playlist(playlist **p)
 
     *p = ler_playlist(binario);
     printf("Playlist %s carregada com sucesso.\n", (*p)->nome_da_playlist);
+
+    binaryToNum(nome_binario);
 }
 
 int main(int argc, char *argv[])
