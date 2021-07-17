@@ -189,8 +189,9 @@ playlist *ler_playlist(FILE *binario)
 
     //Leitura do cabecalho
     fread(&tam_nome_playlist, sizeof(int), 1, binario);
-    p->nome_da_playlist = malloc(sizeof(char)*tam_nome_playlist);
+    p->nome_da_playlist = malloc(sizeof(char)*(tam_nome_playlist + 1));
     fread(p->nome_da_playlist, sizeof(char), tam_nome_playlist, binario);
+    p->nome_da_playlist[tam_nome_playlist] = 0;
     fread(&(p->n_de_musicas), sizeof(int), 1, binario);
 
     for(int i = 0; i < p->n_de_musicas; ++i) 
@@ -228,7 +229,7 @@ void salvar_playlist(playlist *p)
         escrever_musica_playlist(p->musicas[i], binario);
 
     fclose(binario);
-    printf("Playlist %s salva com sucesso.\n", p->nome_da_playlist);
+    printf("Playlist %s salva com sucesso.\n", nome_binario);
 
     binaryToNum(nome_binario);
 }
@@ -248,7 +249,9 @@ void carregar_playlist(playlist **p)
     if(*p) apagar_playlist(p);
 
     *p = ler_playlist(binario);
-    printf("Playlist %s carregada com sucesso.\n", (*p)->nome_da_playlist);
+
+    fclose(binario);
+    printf("Playlist %s carregada com sucesso.\n", nome_binario);
 
     binaryToNum(nome_binario);
 }
