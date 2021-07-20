@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int $ = 0;
+int $ = 0, eol = 0;
+const int mxN = 1e4;
 
 char *read_token(char *delimitadores)
 {
@@ -13,6 +14,7 @@ char *read_token(char *delimitadores)
             if(c == delimitadores[j]) {
                 if(c == '\r') scanf("%c", &c);
                 if(c == '$') $ = 1;
+                if(c == '\n') eol = 1;
                 linha[i] = 0;
                 return linha;
             }
@@ -53,19 +55,25 @@ int append_nome(char *nome, char ***lista_de_nomes, int *ultima_posicao)
 
 int main(int argc, char *argv[])
 {
-    char **lista_de_nomes = (char**)malloc(sizeof(char*)), *nome;
-    int ultima_posicao = 0;
-    nome = read_token(" $");
-    while(append_nome(nome, &lista_de_nomes, &ultima_posicao)) {
-        if($) {
-            $ ^= 1;
-            break;
-        }
-        nome = read_token(" $");
+    char ***lista_de_nomes = (char***)malloc(sizeof(char**)), *nome;
+    int ultima_posicao[mxN], qtd_nomes = 0;
+
+    for(qtd_nomes = 0; !$; ++qtd_nomes) {
+        lista_de_nomes[qtd_nomes] = (char**)malloc(sizeof(char*));
+        do {
+            if(eol) {
+                eol ^= 1;
+                break;
+            }
+            nome = read_token(" $");
+        } while(append_nome(nome, lista_de_nomes + qtd_nomes, ultima_posicao + qtd_nomes));
     }
 
-    for(int i = 0; i < ultima_posicao; ++i) {
-        printf("%s\n", lista_de_nomes[i]);
+    for(int i = 0; i < qtd_nomes; ++i) {
+        for(int j = 0; j < ultima_posicao[i]; ++j) {
+            printf("%s ", lista_de_nomes[i][j]);
+        }
+        printf("\n");
     }
     return 0;
 }
