@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
             scanf("%f", matriz[i] + j);
         }
     }
-    int a, b, n_ataques = 0;
+    int a, b, n_ataques = 0, indice = 0;
     float ans = 0;
     ataque *ataques;
     while(1) {
@@ -48,10 +48,13 @@ int main(int argc, char *argv[])
     scanf("%d", &tipo_inimigo);
 
     for(int i = 0; i < n_ataques; ++i) {
-        ans = max(ans, matriz[ataques[i].tipo][tipo_inimigo]*ataques[i].poder);
+        if(matriz[ataques[i].tipo][tipo_inimigo]*ataques[i].poder > ans) {
+            ans = matriz[ataques[i].tipo][tipo_inimigo]*ataques[i].poder;
+            indice = ataques[i].tipo;
+        }
     }
 
-    printf("%f\n", ans);
+    printf("%f %d\n", ans, indice);
 
     return 0;
 }
