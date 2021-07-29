@@ -53,9 +53,13 @@ void enquadra_arte(char *nome_do_arquivo_da_arte, int altura_do_quadro, int larg
 //Funcao que le uma string determinada por array de possiveis delimitadores
 char *read_token(FILE *arquivo, char *delimitadores)
 {
+    int i, flag = 0;
     size_t tamanho_da_linha = sizeof(char);
-    char c, *linha = malloc(tamanho_da_linha), *failsafe;
-    for(int i = 0; fread(&c, sizeof(char), 1, arquivo); i++) {
+    char c, *failsafe, *linha = malloc(tamanho_da_linha);
+
+    for(i = 0; fread(&c, sizeof(char), 1, arquivo); i++) {
+        flag = 1;
+
         //Quando chega no final da linha retorna a linha e adiciona o '\0' no final
         for(int j = 0; delimitadores[j] != 0; ++j) {
             if(c == delimitadores[j]) {
@@ -73,6 +77,12 @@ char *read_token(FILE *arquivo, char *delimitadores)
         }
         linha = failsafe;
     }
+
+    if(flag) {
+        linha[i] = 0;
+        return linha;
+    }
+
     free(linha);
     return NULL;
 }
@@ -127,27 +137,6 @@ void print_arte(char **arte, int n_linhas)
         printf("%s\n", arte[i]);
 }
 
-void formatar(char ***arte, int largura, int *n_linhas)
-{
-    char **failsafe = (char**)realloc(*arte, sizeof(char*)*(*n_linhas + 1));
-    char *formatacao = (char*)malloc(sizeof(char)*(largura + 1));
-
-    ++(*n_linhas);
-
-    for(int i = 0; i < largura; ++i) formatacao[i] = ' ';
-    formatacao[largura] = 0;
-
-    if(!failsafe) {
-        for(int i = 0; i < *n_linhas - 1; ++i)
-            free((*arte)[i]);
-        free(*arte);
-        exit(0);
-    }
-
-    *arte = failsafe;
-    (*arte)[(*n_linhas - 1)] = formatacao; 
-}
-
 int main(int argc, char *argv[])
 {
     int n_linhas, n_operacoes, posicao_i, posicao_j, largura_quadro = 0;
@@ -162,8 +151,6 @@ int main(int argc, char *argv[])
     scanf("%d\n", &n_operacoes);
 
     largura_quadro = strlen(arte[0]);
-
-    formatar(&arte, largura_quadro, &n_linhas);
 
     printf("Arte inicial:\n");
     print_arte(arte, n_linhas);
