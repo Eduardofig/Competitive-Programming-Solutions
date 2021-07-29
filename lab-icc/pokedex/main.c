@@ -94,6 +94,23 @@ void free_pokemon(pokemon_t *pokemon)
     free(pokemon);
 }
 
+void add_pokemon(pokemon_t ***pokedex_ptr, int *n_pokemon)
+{
+    if(!*pokedex_ptr) *pokedex_ptr = (pokemon_t**)malloc(sizeof(pokemon_t));
+    else {
+        pokemon_t **tmp = (pokemon_t**)realloc(pokedex_ptr, sizeof(pokemon_t*)*(*n_pokemon + 1));
+        if(!tmp) {
+            for(int i = 0; i < *n_pokemon; ++i)
+                free_pokemon(*pokedex_ptr[i]);
+            exit(0);
+        }
+
+        *pokedex_ptr = tmp;
+    }
+
+    *pokedex_ptr[*n_pokemon++] = ler_pokemon();
+}
+
 void add_ataque(pokemon_t *pokemon, ataque_t *ataque)
 {
     if(!pokemon->ataques) pokemon->ataques = (ataque_t**)malloc(sizeof(ataque_t*));
@@ -111,7 +128,5 @@ void add_ataque(pokemon_t *pokemon, ataque_t *ataque)
 
 int main(int argc, char *argv[])
 {
-    /*print_pokemon(ler_pokemon());*/
-    print_ataque(ler_ataque());
     return 0;
 }
