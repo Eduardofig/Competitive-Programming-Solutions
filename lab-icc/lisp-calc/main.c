@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+//Setar para um se quiser ver a expressao completa escrita
+#define MOSTRA_EXPR 0
+
 double eval_lisp_expr()
 {
     char curr = getchar();
@@ -14,11 +17,11 @@ double eval_lisp_expr()
     for(char c = '0'; c != '9' + 1; ++c) {
         if(curr == c) {
             ungetc(curr, stdin);
-            char discard;
+            char flush;
             double ans;
             scanf("%lf", &ans);
-            discard = getchar();
-            printf("%f", ans);
+            flush = getchar();
+            if(MOSTRA_EXPR) printf("%f", ans);
             return ans;
         }
     }
@@ -29,7 +32,7 @@ double eval_lisp_expr()
     //avalia a primeira expressao recursivamente
     double num = eval_lisp_expr();
 
-    printf(" %c ", curr);
+    if(MOSTRA_EXPR) printf(" %c ", curr);
 
     //Retorna a operacao da primeira expressao com a segunda expressao
     switch(curr) {
@@ -42,19 +45,20 @@ double eval_lisp_expr()
         default:
             return num/eval_lisp_expr();
     }
-
 }
 
 int main(int argc, char *argv[])
 {
-    char discard = 0;
+    char flush = 0;
+
     while(1) {
         double res = eval_lisp_expr();
-        printf(" = %lf\n", res);
+        if(MOSTRA_EXPR) printf(" = ");
+        printf("%lf\n", res);
 
         //Flush do resto da linha do buffer
-        while(discard != '\n') discard = getchar();
-        discard = 0;
+        while(flush != '\n') flush = getchar();
+        flush = 0;
     }
     return 0;
 }
