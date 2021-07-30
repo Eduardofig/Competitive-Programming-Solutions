@@ -7,6 +7,8 @@
 double eval_lisp_expr()
 {
     char curr = getchar();
+
+    //Finalizacao do programa
     if(curr == EOF) exit(0);
 
     //Se for espaco pula para o proximo caractere
@@ -17,11 +19,15 @@ double eval_lisp_expr()
     for(char c = '0'; c != '9' + 1; ++c) {
         if(curr == c) {
             ungetc(curr, stdin);
+
             char flush;
             double ans;
+
             scanf("%lf", &ans);
             flush = getchar();
+
             if(MOSTRA_EXPR) printf("%f", ans);
+
             return ans;
         }
     }
