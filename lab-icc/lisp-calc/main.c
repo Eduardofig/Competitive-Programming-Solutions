@@ -11,8 +11,8 @@ double eval_lisp_expr()
     //Finalizacao do programa
     if(curr == EOF) exit(0);
 
-    //Se for espaco pula para o proximo caractere
-    if(curr == ' ') return eval_lisp_expr();
+    //Se for espaco ou fecha parentese pula para o proximo caractere
+    if(curr == ' ' || curr == ')') return eval_lisp_expr();
 
     //Se for um numero, devolve o char para o buffer, le o numero
     //e o retorna
@@ -20,13 +20,15 @@ double eval_lisp_expr()
         if(curr == c) {
             ungetc(curr, stdin);
 
-            char flush;
             double ans;
 
             scanf("%lf", &ans);
-            flush = getchar();
+            curr = getchar();
+            
+            //Devolve o \n para nao dar erro na leitura
+            if(curr == '\n') ungetc(curr, stdin);
 
-            if(MOSTRA_EXPR) printf("%f", ans);
+            if(MOSTRA_EXPR) printf("%lf", ans);
 
             return ans;
         }
@@ -63,7 +65,9 @@ int main(int argc, char *argv[])
         printf("%lf\n", res);
 
         //Flush do resto da linha do buffer
-        while(flush != '\n') flush = getchar();
+        while(flush != '\n')
+            flush = getchar();
+
         flush = 0;
     }
     return 0;
