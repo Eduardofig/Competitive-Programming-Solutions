@@ -126,6 +126,12 @@ void add_ataque(pokemon_t *pokemon, ataque_t *ataque)
     pokemon->ataques[(pokemon->n_ataques++)] = ler_ataque();
 }
 
+void add_ataque_pokedex(pokemon_t **pokedex, ataque_t *ataque, int indice_pokemon)
+{
+    if(!pokedex || !ataque) return;
+    add_ataque(pokedex[indice_pokemon], ataque);
+}
+
 int main(int argc, char *argv[])
 {
     return 0;
