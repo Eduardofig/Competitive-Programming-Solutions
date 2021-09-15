@@ -3,19 +3,19 @@
 
 char **read_file(char *filename, int *size)
 {
-  FILE *stream = fopen(filename, "r");
-  char **field = (char **)malloc(sizeof(char *));
-  int i = 0;
-  field[i] = (char *)malloc(sizeof(char) * 10);
-  while (fgets(field[i], 100, stream)) {
-    ++i;
-    field = realloc(field, sizeof(char *) * (i + 1));
+    FILE *stream = fopen(filename, "r");
+    char **field = (char **)malloc(sizeof(char *));
+    int i = 0;
     field[i] = (char *)malloc(sizeof(char) * 10);
-  }
+    while (fgets(field[i], 100, stream)) {
+        ++i;
+        field = realloc(field, sizeof(char *) * (i + 1));
+        field[i] = (char *)malloc(sizeof(char) * 10);
+    }
 
-  *size = i;
+    *size = i;
 
-  return field;
+    return field;
 }
 
 int check_valid_position(char **field, int i, int j, int size)
@@ -27,7 +27,7 @@ void field_dfs(int i, int j, int col, char **field, int size)
 {
 
     int dir_i[6] = {0, 1, 0, -1, 0},
-    dir_j[6] = {0, 1, 0, -1, 0};
+        dir_j[6] = {0, 1, 0, -1, 0};
 
     field[i][j] = '*';
 
