@@ -18,6 +18,26 @@ char **read_file(char *filename, int *size)
   return field;
 }
 
+int check_valid_position(char **field, int i, int j, int size)
+{
+    return i < size && j < size && i >= 0 && j >= 0 && field[i][j] == '.';
+}
+
+void field_dfs(int i, int j, int col, char **field, int size)
+{
+
+    int dir_i[6] = {0, 1, 0, -1, 0},
+    dir_j[6] = {0, 1, 0, -1, 0};
+
+    field[i][j] = '*';
+
+    for(int k = 0; k < col; ++k) {
+        if(!check_valid_position(field, i, j, size)) {
+            field_dfs(i + dir_i[k], j + dir_j[k], col, field, size);
+        }
+    }
+}
+
 void print_field(char **field, int size)
 {
     for(int i = 0; i < size; ++i) {
