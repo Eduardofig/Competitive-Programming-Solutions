@@ -1,19 +1,34 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-char **read_file(char *filename, int *size)
+#define true 1
+#define false 0
+
+typedef char bool;
+
+char **read_file(char *filename, char ***field_ptr, char ***visited_ptr, int *size)
 {
     FILE *stream = fopen(filename, "r");
-    char **field = (char **)malloc(sizeof(char *));
+    char **field = (char**)malloc(sizeof(char*));
+    bool **show = (bool**)malloc(sizeof(bool*));
     int i = 0;
-    field[i] = (char *)malloc(sizeof(char) * 10);
+    field[i] = (char*)malloc(sizeof(char)*10);
+    show[i] = (bool*)malloc(sizeof(bool*)*10);
+
     while (fgets(field[i], 100, stream)) {
         ++i;
-        field = realloc(field, sizeof(char *) * (i + 1));
-        field[i] = (char *)malloc(sizeof(char) * 10);
+        field = realloc(field, sizeof(char*)*(i + 1));
+        show = realloc(show, sizeof(char*)*(i + 1));
+        field[i] = (char*)malloc(sizeof(char)*10);
+        show[i] = (bool*)malloc(sizeof(bool)*10);
+
+        memset(show[i], false, sizeof(bool)*10);
     }
 
     *size = i;
+    *field_ptr = field;
+    *visited_ptr = show;
 
     return field;
 }
@@ -23,17 +38,17 @@ int check_valid_position(char **field, int i, int j, int size)
     return i < size && j < size && i >= 0 && j >= 0 && field[i][j] == '.';
 }
 
-void field_dfs(int i, int j, int col, char **field, int size)
+void field_dfs(char **field, bool **show, int i, int j, int col, int size)
 {
 
     int dir_i[6] = {0, 1, 0, -1, 0},
         dir_j[6] = {0, 1, 0, -1, 0};
 
-    field[i][j] = '*';
+    show[i][j] = true;
 
     for(int k = 0; k < col; ++k) {
         if(!check_valid_position(field, i, j, size)) {
-            field_dfs(i + dir_i[k], j + dir_j[k], col, field, size);
+            field_dfs(field, show, i + dir_i[k], j + dir_j[k], col, size);
         }
     }
 }
@@ -48,8 +63,8 @@ void print_field(char **field, int size)
 int main()
 {
     int size;
-    char **field = read_file("teste.txt", &size);
+    char **field, **show;
+    read_file("teste.txt", &field, &show, &size);
     printf("size = %d\n", size);
     print_field(field, size);
-
 }
