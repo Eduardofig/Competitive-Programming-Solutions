@@ -4,7 +4,7 @@
 
 #define true 1
 #define false 0
-#define ERROR 0x3f3f3f3f
+#define ERROR -0x3f3f3f3f
 
 typedef char bool;
 
@@ -57,8 +57,8 @@ int **make_hints(char **field, int field_height, int field_width)
     return hints;
 }
 
-char **read_file(char *filename, char ***field_ptr, char ***visited_ptr,
-                 int ***hints_ptr, int *field_height_ptr, int *field_width_ptr)
+void read_file(char *filename, char ***field_ptr, char ***visited_ptr,
+        int ***hints_ptr, int *field_height_ptr, int *field_width_ptr)
 {
     FILE *stream = fopen(filename, "r");
     *field_width_ptr = get_field_width(stream);
@@ -70,7 +70,7 @@ char **read_file(char *filename, char ***field_ptr, char ***visited_ptr,
     field[i] = (char*)malloc(sizeof(char)*(*field_width_ptr));
     show[i] = (bool*)malloc(sizeof(bool*)*(*field_width_ptr));
 
-    while (fread(field[i], sizeof(char), *field_width_ptr, stream)) {
+    while(fread(field[i], sizeof(char), *field_width_ptr, stream)) {
         ++i;
         field = realloc(field, sizeof(char*)*(i + 1));
         show = realloc(show, sizeof(char*)*(i + 1));
@@ -85,8 +85,6 @@ char **read_file(char *filename, char ***field_ptr, char ***visited_ptr,
     *field_ptr = field;
     *visited_ptr = show;
     *hints_ptr = make_hints(*field_ptr, *field_height_ptr, *field_width_ptr);
-
-    return field;
 }
 
 void field_dfs(char **field, bool **show, int i, int j, int field_height, int field_width)
@@ -94,8 +92,8 @@ void field_dfs(char **field, bool **show, int i, int j, int field_height, int fi
 
     if(show[i][j]) return;
 
-    int dir_i[8] = {0, 1, 0, -1, 0, 0, 0},
-        dir_j[8] = {0, 1, 0, -1, 0, 0, 0};
+    int dir_i[8] = {1, 1, 1, 0, 0, -1, -1, -1},
+        dir_j[8] = {1, -1, 0, 1, -1, 1, -1, 0};
 
     show[i][j] = true;
 
