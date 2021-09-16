@@ -171,7 +171,6 @@ int main(int argc, char *argv[])
     print_entire_field(field, field_height, field_width);
     printf("\n");
     print_field_with_hints(field, hints, field_height, field_width);
-    printf("\n");
 
     if(select_pos_and_eval_alive(field, hints, field_height, field_width, 1, 2)) printf("esta vivo\n");
     else printf("esta morto\n");
