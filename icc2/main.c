@@ -104,14 +104,10 @@ void field_dfs(char **field, bool **show, int i, int j, int field_height, int fi
     }
 }
 
-void print_visible_field(char **field, bool **show, int field_height, int field_width)
+void reset_show(bool **show, int field_height, int field_width)
 {
     for(int i = 0; i < field_height; ++i) {
-        for(int j = 0; j < field_width; ++j) {
-            if(show[i][j]) printf("%c", field[i][j]);
-            else printf("X");
-        }
-        printf("\n");
+        memset(show[i], 0, sizeof(bool)*field_width);
     }
 }
 
@@ -136,24 +132,50 @@ void print_field_with_hints(char **field, int **hints, int field_height, int fie
     }
 }
 
-bool select_pos_and_eval_alive(char **field, int **hints, int field_height, int field_width, int pos_i, int pos_j)
+void print_visible_field(char **field, bool **show, int **hints, int field_height, int field_width)
+{
+    for(int i = 0; i < field_height; ++i) {
+        for(int j = 0; j < field_width; ++j) {
+            if(show[i][j]) {
+                if(hints[i][j]) printf("%d", hints[i][j]);
+                else printf("%c", field[i][j]);
+            } else {
+                printf("x");
+            }
+        }
+        printf("\n");
+    }
+}
+
+void print_single_hint(char **field, bool **show, int **hints, int pos_i, int pos_j, int field_height, int field_width)
+{
+    for(int i = 0; i < field_height; ++i) {
+        for(int j = 0; j < field_width; ++j) {
+            if(i == pos_i && j == pos_j) {
+                if(hints[i][j]) printf("%d", hints[i][j]);
+                else printf(".");
+            } else printf("X");
+        }
+        printf("\n");
+    }
+
+}
+
+bool select_pos_and_eval_alive(char **field, bool **show, int **hints, int field_height, int field_width, int pos_i, int pos_j)
 {
     if(field[pos_i][pos_j] == '*') {
         print_entire_field(field, field_height, field_width);
         return false;
+    } 
+
+    if(hints[pos_i][pos_j]) {
+        print_single_hint(field, show, hints, pos_i, pos_j, field_height, field_width);
+        return true;
     }
 
-    else {
-        for(int i = 0; i < field_height; ++i) {
-            for(int j = 0; j < field_width; ++j) {
-                if(i == pos_i && j == pos_j) {
-                    if(hints[i][j]) printf("%d", hints[i][j]);
-                    else printf(".");
-                } else printf("X");
-            }
-            printf("\n");
-        }
-    }
+    field_dfs(field, show, pos_i, pos_j, field_height, field_width);
+    print_visible_field(field, show, hints, field_height, field_width);
+    reset_show(show, field_height, field_width);
 
     return true;
 }
@@ -173,7 +195,7 @@ int main(int argc, char *argv[])
     print_field_with_hints(field, hints, field_height, field_width);
     printf("\n");
 
-    if(select_pos_and_eval_alive(field, hints, field_height, field_width, 1, 2)) printf("esta vivo\n");
+    if(select_pos_and_eval_alive(field, show, hints, field_height, field_width, 0, 1)) printf("esta vivo\n");
     else printf("esta morto\n");
 
     return 0;
