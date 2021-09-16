@@ -26,7 +26,7 @@ int get_field_width(FILE *stream)
 
 int check_valid_position(int i, int j, int field_height, int field_width)
 {
-    return i < field_height && j < field_width && i >= 0 && j >= 0;
+    return (i < field_height) && (j < field_width) && (i >= 0) && (j >= 0);
 }
 
 int **make_hints(char **field, int field_height, int field_width)
@@ -90,7 +90,7 @@ void read_file(char *filename, char ***field_ptr, bool ***visited_ptr,
 void field_dfs(char **field, bool **show, int **hints, int i, int j, int field_height, int field_width)
 {
 
-    if(show[i][j]) return;
+    if(show[i][j] || field[i][j] == '*') return;
 
     show[i][j] = true;
     
@@ -99,11 +99,9 @@ void field_dfs(char **field, bool **show, int **hints, int i, int j, int field_h
     int dir_i[8] = {1, 1, 1, 0, 0, -1, -1, -1},
         dir_j[8] = {1, -1, 0, 1, -1, 1, -1, 0};
 
-    show[i][j] = true;
-
     for(int k = 0; k < 8; ++k) {
-        if(check_valid_position(i + dir_i[k], j + dir_j[k], field_height, field_width) && field[i][j] != '*') {
-            field_dfs(field, show, hints, i + dir_i[k], j + dir_j[k], field_width, field_height);
+        if(check_valid_position(i + dir_i[k], j + dir_j[k], field_height, field_width)) {
+            field_dfs(field, show, hints, i + dir_i[k], j + dir_j[k], field_height, field_width);
         }
     }
 }
@@ -168,7 +166,7 @@ void print_single_hint(char **field, bool **show, int **hints, int pos_i, int po
 bool select_pos_and_eval_alive(char **field, bool **show, int **hints, int field_height, int field_width, int pos_i, int pos_j)
 {
     if(field[pos_i][pos_j] == '*') {
-        print_entire_field(field, field_height, field_width);
+        print_field_with_hints(field, hints, field_height, field_width);
         return false;
     } 
 
@@ -185,55 +183,77 @@ bool select_pos_and_eval_alive(char **field, bool **show, int **hints, int field
     return true;
 }
 
+void free_matrices(char **field, bool **show, int **hints, int field_height)
+{
+    for(int i = 0; i < field_height; ++i) {
+        free(field[i]);
+        free(show[i]);
+        free(hints[i]);
+    }
+
+    free(field[field_height]);
+    free(show[field_height]);
+
+    free(field);
+    free(show);
+    free(hints);
+}
+
 int main(int argc, char *argv[])
 {
     int field_height, field_width, selector, pos_i, pos_j, **hints;
     char **field, file_name[100];
     bool **show;
-    read_file("teste.txt", &field, &show, &hints, &field_height, &field_width);
-    printf("height = %d, width = %d\n\n", field_height, field_width);
-    /*show[3][4] = true;*/
-    /*show[4][2] = true;*/
-    /*print_visible_field(field, show, field_height, field_width);*/
-    print_entire_field(field, field_height, field_width);
-    printf("\n");
-    print_field_with_hints(field, hints, field_height, field_width);
-    printf("\n");
+    /*read_file("teste.txt", &field, &show, &hints, &field_height, &field_width);*/
+    /*printf("height = %d, width = %d\n\n", field_height, field_width);*/
+    /*print_entire_field(field, field_height, field_width);*/
+    /*printf("\n");*/
+    /*print_field_with_hints(field, hints, field_height, field_width);*/
+    /*printf("\n");*/
 
-    if(select_pos_and_eval_alive(field, show, hints, field_height, field_width, 3, 8)) printf("esta vivo\n");
-    else printf("esta morto\n");
-    printf("\n");
-    for(int i = 0; i < field_height; ++i) {
-        for(int j = 0; j < field_width; ++j) {
-            printf("%d", show[i][j]);
-        }
-        printf("\n");
-    }
+    /*if(select_pos_and_eval_alive(field, show, hints, field_height, field_width, 3, 8)) printf("esta vivo\n");*/
+    /*else printf("esta morto\n");*/
+    /*printf("\n");*/
+    /*for(int i = 0; i < field_height; ++i) {*/
+        /*for(int j = 0; j < field_width; ++j) {*/
+            /*printf("%d", show[i][j]);*/
+        /*}*/
+        /*printf("\n");*/
+    /*}*/
 
+    /*free_matrices(field, show, hints, field_height);*/
 
-    while(1) {
-        scanf("%d\n", &selector);
+    while(scanf("%d\n", &selector) == 1) {
         switch(selector)
         {
             case 1:
                 scanf("%s\n", file_name);
                 read_file(file_name, &field, &show, &hints, &field_height, &field_width);
 
+                /*printf("height = %d, width = %d\n", field_height, field_width);*/
+
                 print_entire_field(field, field_height, field_width);
+                free_matrices(field, show, hints, field_height);
 
                 break;
             case 2:
                 scanf("%s\n", file_name);
                 read_file(file_name, &field, &show, &hints, &field_height, &field_width);
 
+                /*printf("height = %d, width = %d\n", field_height, field_width);*/
+
                 print_field_with_hints(field, hints, field_height, field_width);
+                free_matrices(field, show, hints, field_height);
 
                 break;
             case 3:
                 scanf("%s\n%d %d", file_name, &pos_i, &pos_j);
                 read_file(file_name, &field, &show, &hints, &field_height, &field_width);
 
+                /*printf("height = %d, width = %d\n", field_height, field_width);*/
+
                 select_pos_and_eval_alive(field, show, hints, field_height, field_width, pos_i, pos_j);
+                free_matrices(field, show, hints, field_height);
 
                 break;
         }
