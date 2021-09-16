@@ -144,7 +144,7 @@ void print_visible_field(char **field, bool **show, int **hints, int field_heigh
                 if(hints[i][j]) printf("%d", hints[i][j]);
                 else printf("%c", field[i][j]);
             } else {
-                printf("x");
+                printf("X");
             }
         }
         printf("\n");
@@ -187,8 +187,8 @@ bool select_pos_and_eval_alive(char **field, bool **show, int **hints, int field
 
 int main(int argc, char *argv[])
 {
-    int field_height, field_width, **hints;
-    char **field;
+    int field_height, field_width, selector, pos_i, pos_j, **hints;
+    char **field, file_name[100];
     bool **show;
     read_file("teste.txt", &field, &show, &hints, &field_height, &field_width);
     printf("height = %d, width = %d\n\n", field_height, field_width);
@@ -202,6 +202,42 @@ int main(int argc, char *argv[])
 
     if(select_pos_and_eval_alive(field, show, hints, field_height, field_width, 3, 8)) printf("esta vivo\n");
     else printf("esta morto\n");
+    printf("\n");
+    for(int i = 0; i < field_height; ++i) {
+        for(int j = 0; j < field_width; ++j) {
+            printf("%d", show[i][j]);
+        }
+        printf("\n");
+    }
+
+
+    while(1) {
+        scanf("%d\n", &selector);
+        switch(selector)
+        {
+            case 1:
+                scanf("%s\n", file_name);
+                read_file(file_name, &field, &show, &hints, &field_height, &field_width);
+
+                print_entire_field(field, field_height, field_width);
+
+                break;
+            case 2:
+                scanf("%s\n", file_name);
+                read_file(file_name, &field, &show, &hints, &field_height, &field_width);
+
+                print_field_with_hints(field, hints, field_height, field_width);
+
+                break;
+            case 3:
+                scanf("%s\n%d %d", file_name, &pos_i, &pos_j);
+                read_file(file_name, &field, &show, &hints, &field_height, &field_width);
+
+                select_pos_and_eval_alive(field, show, hints, field_height, field_width, pos_i, pos_j);
+
+                break;
+        }
+    }
 
     return 0;
 }
