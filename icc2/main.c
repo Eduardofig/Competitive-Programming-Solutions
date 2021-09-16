@@ -24,39 +24,69 @@ int get_field_width(FILE *stream)
     return width;
 }
 
-char **read_file(char *filename, char ***field_ptr, char ***visited_ptr, int *field_height, int *field_width)
+int check_valid_position(int i, int j, int field_width, int field_height)
+{
+    return i < field_height && j < field_width && i >= 0 && j >= 0;
+}
+
+int **make_hints(char **field, int field_height, int field_width)
+{
+    int **hints = (int**)malloc(sizeof(int*)*(field_height)),
+        dir_i[8] = {1, 1, 1, 0, 0, -1, -1, -1},
+        dir_j[8] = {1, -1, 0, 1, -1, 1, -1, 0};
+
+    //Cria a matriz de dicas preenchendo-a com zeros
+    for(int i = 0; i < field_height; ++i) {
+        hints[i] = (int*)malloc(sizeof(int)*field_width);
+        memset(hints[i], 0, sizeof(int)*(field_width));
+    }
+
+    //Percorre a matriz de dicas preenchendo-as se for um espaco vazio no tabuleiro
+    for(int i = 0; i < field_height; ++i) {
+        for(int j = 0; j < field_width; ++j) {
+            if(field[i][j] == '*') {
+                for(int k = 0; k < 8; ++k) {
+                    if(check_valid_position(i + dir_i[k], j + dir_j[k], field_width, field_height)) {
+                        if(field[i + dir_i[k]][j + dir_j[k]] == '.') hints[i + dir_i[k]][j + dir_j[k]]++;
+                    }
+                }
+            }
+        }
+    }
+
+    return hints;
+}
+
+char **read_file(char *filename, char ***field_ptr, char ***visited_ptr,
+                 int ***hints_ptr, int *field_height_ptr, int *field_width_ptr)
 {
     FILE *stream = fopen(filename, "r");
-    *field_width = get_field_width(stream);
+    *field_width_ptr = get_field_width(stream);
 
     char **field = (char**)malloc(sizeof(char*));
     bool **show = (bool**)malloc(sizeof(bool*));
 
     int i = 0;
-    field[i] = (char*)malloc(sizeof(char)*(*field_width));
-    show[i] = (bool*)malloc(sizeof(bool*)*(*field_width));
+    field[i] = (char*)malloc(sizeof(char)*(*field_width_ptr));
+    show[i] = (bool*)malloc(sizeof(bool*)*(*field_width_ptr));
 
-    while (fread(field[i], sizeof(char), *field_width, stream)) {
+    while (fread(field[i], sizeof(char), *field_width_ptr, stream)) {
         ++i;
         field = realloc(field, sizeof(char*)*(i + 1));
         show = realloc(show, sizeof(char*)*(i + 1));
-        field[i] = (char*)malloc(sizeof(char)*(*field_width));
-        show[i] = (bool*)malloc(sizeof(bool)*(*field_width));
+        field[i] = (char *)malloc(sizeof(char)*(*field_width_ptr));
+        show[i] = (bool *)malloc(sizeof(bool)*(*field_width_ptr));
 
-        memset(show[i], false, sizeof(bool)*(*field_width));
+        memset(show[i], false, sizeof(bool)*(*field_width_ptr));
         fseek(stream, 1, SEEK_CUR);
     }
 
-    *field_height = i;
+    *field_height_ptr = i;
     *field_ptr = field;
     *visited_ptr = show;
+    *hints_ptr = make_hints(*field_ptr, *field_height_ptr, *field_width_ptr);
 
     return field;
-}
-
-int check_valid_position(int i, int j, int field_width, int field_height)
-{
-    return i < field_height && j < field_width && i >= 0 && j >= 0;
 }
 
 void field_dfs(char **field, bool **show, int i, int j, int field_height, int field_width)
@@ -64,8 +94,8 @@ void field_dfs(char **field, bool **show, int i, int j, int field_height, int fi
 
     if(show[i][j]) return;
 
-    int dir_i[6] = {0, 1, 0, -1, 0},
-        dir_j[6] = {0, 1, 0, -1, 0};
+    int dir_i[8] = {0, 1, 0, -1, 0, 0, 0},
+        dir_j[8] = {0, 1, 0, -1, 0, 0, 0};
 
     show[i][j] = true;
 
@@ -99,12 +129,19 @@ void print_entire_field(char **field, int field_height, int field_width)
 
 int main()
 {
-    int field_height, field_width;
+    int field_height, field_width, **hints;
     char **field, **show;
-    read_file("teste.txt", &field, &show, &field_height, &field_width);
+    read_file("teste.txt", &field, &show, &hints, &field_height, &field_width);
     printf("size = %d\n", field_height);
-    show[3][4] = true;
-    show[4][2] = true;
-    print_visible_field(field, show, field_height, field_width);
+    /*show[3][4] = true;*/
+    /*show[4][2] = true;*/
+    /*print_visible_field(field, show, field_height, field_width);*/
     print_entire_field(field, field_height, field_width);
+    printf("\n");
+    for(int i = 0; i < field_height; ++i) {
+        for(int j = 0; j < field_width; ++j) {
+            printf("%d", hints[i][j]);
+        }
+        printf("\n");
+    }
 }

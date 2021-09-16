@@ -1,4 +1,4 @@
-aaaaaaaaaaaaa
-bbbbbbbbbbbbb
-sssssssssssss
-ddddddddddddd
+....**..**..
+..*..**..*..
+***...*...*.
+**.***.....*
