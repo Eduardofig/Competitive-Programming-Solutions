@@ -53,10 +53,24 @@ void field_dfs(char **field, bool **show, int i, int j, int col, int size)
     }
 }
 
-void print_field(char **field, int size)
+void print_visible_field(char **field, bool **show, int size)
 {
     for(int i = 0; i < size; ++i) {
-        printf("%s", field[i]);
+        for(int j = 0; j < size; ++j) {
+            if(show[i][j]) printf("%c", field[i][j]);
+            else printf("X");
+        }
+        printf("\n");
+    }
+}
+
+void print_entire_field(char **field, int size)
+{
+    for(int i = 0; i < size; ++i) {
+        for(int j = 0; j < size; ++j) {
+            printf("%c", field[i][j]);
+        }
+        printf("\n");
     }
 }
 
@@ -66,5 +80,8 @@ int main()
     char **field, **show;
     read_file("teste.txt", &field, &show, &size);
     printf("size = %d\n", size);
-    print_field(field, size);
+    show[3][4] = true;
+    show[4][2] = true;
+    print_visible_field(field, show, size);
+    print_entire_field(field, size);
 }
