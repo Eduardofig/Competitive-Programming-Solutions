@@ -87,19 +87,23 @@ void read_file(char *filename, char ***field_ptr, bool ***visited_ptr,
     *hints_ptr = make_hints(*field_ptr, *field_height_ptr, *field_width_ptr);
 }
 
-void field_dfs(char **field, bool **show, int i, int j, int field_height, int field_width)
+void field_dfs(char **field, bool **show, int **hints, int i, int j, int field_height, int field_width)
 {
 
     if(show[i][j]) return;
+
+    show[i][j] = true;
+    
+    if(hints[i][j]) return;
 
     int dir_i[8] = {1, 1, 1, 0, 0, -1, -1, -1},
         dir_j[8] = {1, -1, 0, 1, -1, 1, -1, 0};
 
     show[i][j] = true;
 
-    for(int k = 0; k < 6; ++k) {
-        if(check_valid_position(i + dir_i[k], j + dir_j[k], field_height, field_width) && field[i][j] == '.') {
-            field_dfs(field, show, i + dir_i[k], j + dir_j[k], field_width, field_height);
+    for(int k = 0; k < 8; ++k) {
+        if(check_valid_position(i + dir_i[k], j + dir_j[k], field_height, field_width) && field[i][j] != '*') {
+            field_dfs(field, show, hints, i + dir_i[k], j + dir_j[k], field_width, field_height);
         }
     }
 }
@@ -173,7 +177,8 @@ bool select_pos_and_eval_alive(char **field, bool **show, int **hints, int field
         return true;
     }
 
-    field_dfs(field, show, pos_i, pos_j, field_height, field_width);
+    field_dfs(field, show, hints, pos_i, pos_j, field_height, field_width);
+
     print_visible_field(field, show, hints, field_height, field_width);
     reset_show(show, field_height, field_width);
 
@@ -195,7 +200,7 @@ int main(int argc, char *argv[])
     print_field_with_hints(field, hints, field_height, field_width);
     printf("\n");
 
-    if(select_pos_and_eval_alive(field, show, hints, field_height, field_width, 0, 1)) printf("esta vivo\n");
+    if(select_pos_and_eval_alive(field, show, hints, field_height, field_width, 3, 8)) printf("esta vivo\n");
     else printf("esta morto\n");
 
     return 0;
