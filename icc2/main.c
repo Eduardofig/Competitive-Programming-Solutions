@@ -1,3 +1,9 @@
+/*
+ * Nome: Eduardo Figueiredo Freire Andrade
+ * NUSP: 11232820
+ * Icc 2, Trabalho 1: Campo Minado
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -8,6 +14,7 @@
 
 typedef unsigned char bool;
 
+//Funcao que calcula a largura do campo quando ainda esta no arquivo
 int get_field_width(FILE *stream)
 {
 
@@ -24,11 +31,13 @@ int get_field_width(FILE *stream)
     return width;
 }
 
+//Funcao que checa se uma determinada posicao e valida
 int check_valid_position(int i, int j, int field_height, int field_width)
 {
     return (i < field_height) && (j < field_width) && (i >= 0) && (j >= 0);
 }
 
+//Funcao que cria uma matriz de dicas dado um determinado campo
 int **make_hints(char **field, int field_height, int field_width)
 {
     int **hints = (int**)malloc(sizeof(int*)*(field_height)),
@@ -57,6 +66,7 @@ int **make_hints(char **field, int field_height, int field_width)
     return hints;
 }
 
+//Funcao que le o arquivo e seta todos os parametros e matrizes
 void read_file(char *filename, char ***field_ptr, bool ***visited_ptr,
         int ***hints_ptr, int *field_height_ptr, int *field_width_ptr)
 {
@@ -87,6 +97,7 @@ void read_file(char *filename, char ***field_ptr, bool ***visited_ptr,
     *hints_ptr = make_hints(*field_ptr, *field_height_ptr, *field_width_ptr);
 }
 
+//Funcao que efetua uma busca em profundidade pelos espacos vazios do campo
 void field_dfs(char **field, bool **show, int **hints, int i, int j, int field_height, int field_width)
 {
 
@@ -106,6 +117,7 @@ void field_dfs(char **field, bool **show, int **hints, int i, int j, int field_h
     }
 }
 
+//Funcao que reseta a matriz show que determina qual parte do campo eh visivel
 void reset_show(bool **show, int field_height, int field_width)
 {
     for(int i = 0; i < field_height; ++i) {
@@ -113,6 +125,7 @@ void reset_show(bool **show, int field_height, int field_width)
     }
 }
 
+//Funcao que printa o campo inteiro
 void print_entire_field(char **field, int field_height, int field_width)
 {
     for (int i = 0; i < field_height; ++i) {
@@ -123,6 +136,7 @@ void print_entire_field(char **field, int field_height, int field_width)
     }
 }
 
+//Funcao que printa o campo com as dicas
 void print_field_with_hints(char **field, int **hints, int field_height, int field_width)
 {
     for(int i = 0; i < field_height; ++i) {
@@ -134,6 +148,7 @@ void print_field_with_hints(char **field, int **hints, int field_height, int fie
     }
 }
 
+//Funcao que printa a parte do campo que esta visivel
 void print_visible_field(char **field, bool **show, int **hints, int field_height, int field_width)
 {
     for(int i = 0; i < field_height; ++i) {
@@ -149,6 +164,7 @@ void print_visible_field(char **field, bool **show, int **hints, int field_heigh
     }
 }
 
+//Funcao que printa uma unica dica e um monte de X no campo
 void print_single_hint(char **field, bool **show, int **hints, int pos_i, int pos_j, int field_height, int field_width)
 {
     for(int i = 0; i < field_height; ++i) {
@@ -163,16 +179,17 @@ void print_single_hint(char **field, bool **show, int **hints, int pos_i, int po
 
 }
 
-bool select_pos_and_eval_alive(char **field, bool **show, int **hints, int field_height, int field_width, int pos_i, int pos_j)
+//Funcao que avalia o que vai acontecer quando uma determinada posicao eh selecionada
+void eval_pos_field(char **field, bool **show, int **hints, int field_height, int field_width, int pos_i, int pos_j)
 {
     if(field[pos_i][pos_j] == '*') {
         print_field_with_hints(field, hints, field_height, field_width);
-        return false;
+        return;
     } 
 
     if(hints[pos_i][pos_j]) {
         print_single_hint(field, show, hints, pos_i, pos_j, field_height, field_width);
-        return true;
+        return;
     }
 
     field_dfs(field, show, hints, pos_i, pos_j, field_height, field_width);
@@ -180,9 +197,10 @@ bool select_pos_and_eval_alive(char **field, bool **show, int **hints, int field
     print_visible_field(field, show, hints, field_height, field_width);
     reset_show(show, field_height, field_width);
 
-    return true;
+    return;
 }
 
+//Funcao que desaloca as 3 matrizes
 void free_matrices(char **field, bool **show, int **hints, int field_height)
 {
     for(int i = 0; i < field_height; ++i) {
@@ -204,33 +222,14 @@ int main(int argc, char *argv[])
     int field_height, field_width, selector, pos_i, pos_j, **hints;
     char **field, file_name[100];
     bool **show;
-    /*read_file("teste.txt", &field, &show, &hints, &field_height, &field_width);*/
-    /*printf("height = %d, width = %d\n\n", field_height, field_width);*/
-    /*print_entire_field(field, field_height, field_width);*/
-    /*printf("\n");*/
-    /*print_field_with_hints(field, hints, field_height, field_width);*/
-    /*printf("\n");*/
 
-    /*if(select_pos_and_eval_alive(field, show, hints, field_height, field_width, 3, 8)) printf("esta vivo\n");*/
-    /*else printf("esta morto\n");*/
-    /*printf("\n");*/
-    /*for(int i = 0; i < field_height; ++i) {*/
-        /*for(int j = 0; j < field_width; ++j) {*/
-            /*printf("%d", show[i][j]);*/
-        /*}*/
-        /*printf("\n");*/
-    /*}*/
-
-    /*free_matrices(field, show, hints, field_height);*/
-
+    //Da scan continuamente enquanto houver comandos no buffer de entrada
     while(scanf("%d\n", &selector) == 1) {
         switch(selector)
         {
             case 1:
                 scanf("%s\n", file_name);
                 read_file(file_name, &field, &show, &hints, &field_height, &field_width);
-
-                /*printf("height = %d, width = %d\n", field_height, field_width);*/
 
                 print_entire_field(field, field_height, field_width);
                 free_matrices(field, show, hints, field_height);
@@ -240,8 +239,6 @@ int main(int argc, char *argv[])
                 scanf("%s\n", file_name);
                 read_file(file_name, &field, &show, &hints, &field_height, &field_width);
 
-                /*printf("height = %d, width = %d\n", field_height, field_width);*/
-
                 print_field_with_hints(field, hints, field_height, field_width);
                 free_matrices(field, show, hints, field_height);
 
@@ -250,9 +247,7 @@ int main(int argc, char *argv[])
                 scanf("%s\n%d %d", file_name, &pos_i, &pos_j);
                 read_file(file_name, &field, &show, &hints, &field_height, &field_width);
 
-                /*printf("height = %d, width = %d\n", field_height, field_width);*/
-
-                select_pos_and_eval_alive(field, show, hints, field_height, field_width, pos_i, pos_j);
+                eval_pos_field(field, show, hints, field_height, field_width, pos_i, pos_j);
                 free_matrices(field, show, hints, field_height);
 
                 break;
