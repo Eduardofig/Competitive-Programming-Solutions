@@ -100,7 +100,6 @@ void read_file(char *filename, char ***field_ptr, bool ***visited_ptr,
 //Funcao que efetua uma busca em profundidade pelos espacos vazios do campo
 void field_dfs(char **field, bool **show, int **hints, int i, int j, int field_height, int field_width)
 {
-
     if(show[i][j] || field[i][j] == '*') return;
 
     show[i][j] = true;
