@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
-#define SOLVE_METHOD solve_astar
-#define SHOW_N_VISITED true
+#define SOLVE_METHOD solve_best_first_search
+#define SHOW_N_VISITED false
 
 using namespace std;
 
@@ -33,16 +33,13 @@ void calc_next(int &i, int &j, int &k, int &l)
 
 int calc_manhattan(int i, int j, int k, int l)
 {
-    auto[ni, nj, nk, nl] = target;
+    int a = abs(get<0>(target) - i) + abs(get<1>(target) - j) + abs(get<2>(target) - k) + abs(get<3>(target) - l),
+    b = abs(i + 9 - get<0>(target)) + abs(j + 9 - get<1>(target)) + abs(k + 9 - get<2>(target)) + abs(l + 9 - get<3>(target)),
+    c = abs(get<0>(target) + 9 - i) + abs(get<1>(target) + 9 - j) + abs(get<2>(target) + 9 - k) + abs(get<3>(target) + 9 - l);
 
-    int a = min({abs(ni - i), abs(i + 9 - ni), abs(ni + 9 - i)}),
-        b = min({abs(nj - j), abs(j + 9 - nj), abs(nj + 9 - j)}),
-        c = min({abs(nk - k), abs(k + 9 - nk), abs(nk + 9 - k)}),
-        d = min({abs(nl - l), abs(l + 9 - nl), abs(nl + 9 - l)});
-
-    return a + b + c + d;
+    return min(a, b, c);
 }
-
+ 
 //Solucao sem heuristica
 void solve_breadth_first_search()
 {
@@ -69,7 +66,7 @@ void solve_breadth_first_search()
 
     dist[i][j][k][l] = 0;
     q.push(st);
-
+    
     while(!q.empty()) {
         n_visited++;
 
@@ -129,7 +126,7 @@ void solve_best_first_search()
 
     dist[i][j][k][l] = 0;
     pq.emplace(calc_manhattan(i, j, k, l), st);
-
+    
     while(!pq.empty()) {
         n_visited++;
 
@@ -189,7 +186,7 @@ void solve_astar()
 
     dist[i][j][k][l] = 0;
     pq.emplace(0, st);
-
+    
     while(!pq.empty()) {
         n_visited++;
 
