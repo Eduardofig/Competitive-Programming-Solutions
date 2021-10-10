@@ -11,7 +11,8 @@
     Atentem-se que essas funções servem para auxiliar vocês,
     não é necessário o uso delas, e vocês podem atera-lás
 */
-unsigned char* read_wav_data(char* fname) {
+unsigned char* read_wav_data(char* fname)
+{
     FILE* fp = fopen(fname, "rb");
     unsigned char buf4[4];
 
@@ -22,9 +23,9 @@ unsigned char* read_wav_data(char* fname) {
     unsigned char* data = malloc(sizeof(*data) * (dataSize));
     
     int i = 0;
-    while (i < dataSize) {
+    while (i < dataSize)
         fread(&data[i++], sizeof(unsigned char), 1, fp);
-    }
+
     fclose(fp);
     return data;
 }
@@ -34,14 +35,24 @@ unsigned char* read_wav_data(char* fname) {
     Para os curiosos, atentem-se a complexidade de tempo dela...
     é por esse motivo que os áudios são bem curtos
 */
-double complex *DFT(unsigned char *audio, int length) {
-    double complex *coef = (double complex *) calloc(length, sizeof(double complex));
+double complex *DFT(unsigned char *audio, int length)
+{
+    double complex *coef = (double complex*)calloc(length, sizeof(double complex));
 
-    for (int k = 0; k < length; k++) {
-        for (int n = 0; n < length; n++) {
-            coef[k] += audio[n] * cexp((-2.0 * M_PI * (((k+1) * n * 1.0) / (length * 1.0))) * _Complex_I);
-        }
-        // printf("%.1lf + %.1lfi\n", creal(coef[k]), cimag(coef[k]));
-    }
+    for (int k = 0; k < length; k++)
+        for (int n = 0; n < length; n++)
+            coef[k] += audio[n]*cexp((-2.0*M_PI*(((k+1)*n*1.0)/(length*1.0)))*_Complex_I);
+
     return coef;
+}
+
+double *reverse_DFT(double complex *finished, int length)
+{
+    double *audio = (double*)calloc(length, sizeof(double));
+
+    for (int k = 0; k < length; k++)
+        for (int n = 0; n < length; n++)
+            audio[k] += finished[n]*cexp((2.0*M_PI*(((k+1)*n* 1.0)/(length*1.0)))*_Complex_I)/length;
+
+    return audio;
 }
