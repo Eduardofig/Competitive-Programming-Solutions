@@ -1,3 +1,8 @@
+/*
+   Eduardo Figueiredo Freire Andrade
+   Nusp = 11232820
+   Trabalho 2 de Icc 2
+*/
 #ifndef SORT_H
 #define SORT_H
 
@@ -8,7 +13,10 @@
 
 #define complex _Complex
 
-void merge(double *magnitude, double complex *compressed, int *origin, int st, int e);
-void mergesort_compressed(double *magnitude, double complex *compressed, int *origin, int st, int e);
+//Funcao auxiliar do mergesort que faz o merge de duas particoes de um vetor
+void merge(double complex *coeffs, int *origin, int st, int e);
+
+//Funcao que ordena o vetor de coeficientes de acordo com a magnitude em ordem decrescente
+void mergesort_coeffs(double complex *coeffs, int *origin, int st, int e);
 
 #endif

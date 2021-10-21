@@ -8,3 +8,5 @@ all: main.o func.o sort.o
 	gcc main.o func.o sort.o -lm -o main
 run: main
 	./main
+clean: main func.o sort.o main.o
+	rm *.o main

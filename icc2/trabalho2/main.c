@@ -1,52 +1,62 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
+/*
+   Eduardo Figueiredo Freire Andrade
+   Nusp = 11232820
+   Trabalho 2 de Icc 2
+*/
 #include "func.h"
 #include "sort.h"
 
-double get_magnitude(double complex z)
-{
-    return sqrt(pow(creal(z), 2) + pow(creal(z), 2));
-}
-
 int main(int argc, char *argv[])
 {
-    int t;
-    char file_name[100];
-    scanf("%s %d", file_name, &t);
-    unsigned char *data = read_wav_data(file_name);
-    int sz = (int)strlen(data), origin[sz];
-    complex double *compressed = DFT(data, sz), finished[sz];
-    double magnitude[sz], *compressed_audio;
+    int t, sz, less_zero = 0;
+    char file_name[50];
 
+    scanf("%s %d", file_name, &t);
+
+    unsigned char *data = read_wav_data(file_name, &sz), *compressed_audio, header[44];
+    int origin[sz];
+    complex double *coeffs = DFT(data, sz), end_coeffs[sz];
+
+    //Pega o cabecalho do audio original
+    FILE *stream = fopen(file_name, "rb");
+    fseek(stream, 0, SEEK_SET);
+    fread(header, sizeof(unsigned char), 44, stream);
+    fclose(stream);
+
+    //Inicializa o vetor origin e conta os valores menores ou iguais a zero
     for(int i = 0; i < sz; ++i) {
         origin[i] = i;
-        magnitude[i] = get_magnitude(compressed[i]);
-        printf("%lf\n", magnitude[i]);
+        if(creal(coeffs[i]) <= 0.0 && cimag(coeffs[i]) <= 0.0) less_zero++;
     }
 
-    mergesort_compressed(magnitude, compressed, origin, 0, sz);
-    for(int i = t; i < sz; ++i) {
-        magnitude[i] = 0;
-        compressed[i] = 0;
-    }
+    //Ordena os coeficientes em ordem decrescente de magnitude
+    mergesort_coeffs(coeffs, origin, 0, sz);
 
+    //Print to output
+    printf("%d\n", sz);
+    printf("%d\n", less_zero);
+
+    for(int i = 0; i < t; ++i)
+        printf("%d\n", (int)cabs(coeffs[i]));
+
+    //zera os coeficientes nao relevantes
+    for(int i = t; i < sz; ++i)
+        coeffs[i] = 0;
+
+    //coloca os coeff na posicao original
     for(int i = 0; i < sz; ++i)
-        printf("number: %f + %f*i, magnitude: %lf, origin: %d\n", creal(compressed[i]), cimag(compressed[i]), get_magnitude(compressed[i]), origin[i]);
+        end_coeffs[origin[i]] = coeffs[i];
 
-    for(int i = 0; i < sz; ++i) {
-        finished[origin[i]] = compressed[i];
-    }
+    //Aplica a tranformada de fourier reversa nos coeficientes
+    compressed_audio = reverse_DFT(end_coeffs, sz);
 
-    for(int i = 0; i < sz; ++i)
-        printf("number: %f + %f*i, magnitude: %lf, origin: %d\n", creal(finished[i]), cimag(finished[i]), get_magnitude(finished[i]), origin[i]);
+    //Escreve os dados no arquivo
+    write_wav_data("out.wav", header, compressed_audio, sz);
 
-    compressed_audio = reverse_DFT(finished, sz);
-
-    for(int i = 0; i < sz; ++i) printf("%lf\n", compressed_audio[i]);
-
+    //desaloca a memoria
     free(data);
-    free(compressed);
+    free(coeffs);
+    free(compressed_audio);
+
     return 0;
 }
