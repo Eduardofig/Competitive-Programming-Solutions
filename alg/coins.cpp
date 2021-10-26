@@ -14,7 +14,7 @@ void solve()
     
     for(int i = 0; i < m; ++i) {
         for(int j = 0; j <= sum; ++j)
-            if(dp[i][j] && i < m) dp[i + 1][j + coins[i]] = dp[i + 1][abs(j - coins[i])] = true;
+            if(dp[i][j]) dp[i + 1][j + coins[i]] = dp[i + 1][abs(j - coins[i])] = true;
 
         sum += coins[i];
     }
