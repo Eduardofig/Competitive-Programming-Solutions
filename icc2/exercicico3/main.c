@@ -1,5 +1,6 @@
 #include "list.h"
 
+//Funcao que le o arquivo e insere as palavras na lista
 void insert_from_file(list_t *l, char *file_name)
 {
     FILE *stream = fopen(file_name, "r");
@@ -11,12 +12,13 @@ void insert_from_file(list_t *l, char *file_name)
         sz = getline(&line, &len, stream);
         if(sz == -1) break;
 
-        line[sz - 1] = 0;
+        if(line[sz - 1] == '\n') line[sz - 1] = 0;
         insert_list(l, line);
         line = NULL;
     }
 
     free(line);
+    fclose(stream);
 }
 
 int main()
@@ -34,6 +36,7 @@ int main()
             case 1:
                 scanf("%s", file_name);
                 insert_from_file(l, file_name);
+                print_list(l);
                 break;
             case 2:
                 mock_update_vec_list(l);
@@ -43,13 +46,13 @@ int main()
                 scanf("%s", query);
 
                 if(!is_updated_list(l)) {
-                    printf("Vetor de índices não atualizado.\n");
+                    printf("Vetor de indices nao atualizado.\n");
                     break;
                 }
 
                 query_result = query_list(l, query);
 
-                if(query_result == -1) printf("Palavra não existe na lista.\n");
+                if(query_result == -1) printf("Palavra nao existe na lista.\n");
                 else printf("%d\n", query_result);
 
                 break;

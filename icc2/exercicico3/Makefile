@@ -1,6 +1,6 @@
 list.o: list.c
-	gcc -c list.c -g -fsanitize=address -o list.o
+	gcc -c list.c -g -o list.o
 all: list.o
-	gcc main.c list.o -g -fsanitize=address -o main
+	gcc main.c list.o -g -o main
 run: main
 	./main
