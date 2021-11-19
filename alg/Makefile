@@ -1,4 +1,4 @@
 all: main.cpp
-	g++ main.cpp -o main
+	g++ main.cpp -g -o main
 run: main
 	./main
