@@ -14,10 +14,16 @@ list_t *alloc_list()
     list_t *l = (list_t*)malloc(sizeof(list_t));
     l->start = NULL;
     l->valid_ptrs = 0;
+    l->updated = false;
     for(int i = 0; i < 26; ++i)
         l->word_ptrs[i] = NULL;
 
     return l;
+}
+
+void mock_update_vec_list(list_t *l)
+{
+    l->updated = true;
 }
 
 void update_ptrs(list_t *l, node_t *n)
@@ -52,6 +58,8 @@ void insert_node(list_t *l, node_t *n, char* string)
 
 void insert_list(list_t *l, char* string)
 {
+    l->updated = false;
+
     if(!l->start) {
         l->start = alloc_node(string);
 
@@ -86,22 +94,21 @@ void print_list(list_t *l)
     if(l->start) print_node(l->start);
 }
 
-bool query_node(node_t *n, char *key)
+int query_node(node_t *n, char *key, int n_nodes)
 {
     if(n && n->string[0] == key[0]) {
-        if(!strcmp(key, n->string)) return true;
-        return query_node(n->next, key);
+        if(!strcmp(key, n->string)) return n_nodes;
+        return query_node(n->next, key, n_nodes + 1);
     }
 
-    return false;
+    return -1;
 }
 
-bool query_list(list_t *l, char *key)
+int query_list(list_t *l, char *key)
 {
-    if(l->word_ptrs[key[0] - 'a'])
-        return query_node(l->word_ptrs[key[0] - 'a'], key);
+    if(l->word_ptrs[key[0] - 'a']) return query_node(l->word_ptrs[key[0] - 'a'], key, 1);
 
-    return false;
+    return -1;
 }
 
 int get_n_ptrs_list(list_t *l)
@@ -109,15 +116,18 @@ int get_n_ptrs_list(list_t *l)
     return l->valid_ptrs;
 }
 
+bool is_updated_list(list_t *l)
+{
+    return l->updated;
+}
+
 void free_node(node_t *n)
 {
     if(n) {
-        node_t *tmp = n->next;
-
-        /*free(n->string);*/
-        free(n);
-
+        free(n->string);
         free_node(n->next);
+
+        free(n);
     }
 }
 
