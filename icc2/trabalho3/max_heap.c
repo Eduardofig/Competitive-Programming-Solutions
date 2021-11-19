@@ -66,7 +66,8 @@ int heap_next_child(max_heap_t *mh, const int curr)
 
     for(int i = 0; i < 2; ++i) {
         tmp = heap_child(i, curr);
-        if(heap_contains(mh, tmp) && heap_cmp(mh->data[tmp], mh->data[next])) next = tmp;
+        if(heap_contains(mh, tmp) && heap_cmp(mh->data[tmp], mh->data[next]))
+            next = tmp;
     }
 
     return next;
@@ -123,6 +124,7 @@ int heap_max(max_heap_t *mh)
 int heap_pop(max_heap_t *mh)
 {
     if(heap_empty(mh)) return ERRO;
+
     int max = mh->data[HEAP_ROOT];
 
     swap(mh->data + HEAP_ROOT, mh->data + mh->size);
@@ -136,9 +138,8 @@ int heap_pop(max_heap_t *mh)
 int main()
 {
     max_heap_t *mh = new_heap();
-    for(int i = 0; i < 20; ++i) heap_push(mh, i);
-
-    for(int i = 0; i < 30; ++i)
-        printf("\n%d ", heap_pop(mh));
-
+    for(int i = 0; i < 20; ++i) heap_push(mh, rand() % 100);
+    for(int i = 0; i < 20; ++i) printf("%d ", heap_pop(mh));
+    free_heap(mh);
+    return 0;
 }

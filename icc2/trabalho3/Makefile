@@ -1,4 +1,4 @@
-all: priority_queue.c
-	gcc priority_queue.c -o priority_queue
-run: priority_queue
-	./priority_queue
+all: max_heap.c
+	gcc max_heap.c -g -fsanitize=address -o max_heap
+run: max_heap
+	./max_heap

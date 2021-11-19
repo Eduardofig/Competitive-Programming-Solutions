@@ -45,7 +45,7 @@ void solve()
 {
     sort(edges.begin(), edges.end(), [](auto &a, auto &b) { return get<2>(a) < get<2>(b); });
 
-    //acha a soma dos pesos da msu
+    //acha a soma dos pesos da mst
     unionfind uf(n);
     int tot = accumulate(edges.begin(), edges.end(), 0, [&uf](int &acc, auto &elem) { return acc + uf.unite(elem); });
 
