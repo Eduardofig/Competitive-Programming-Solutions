@@ -1,15 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#define HEAP_ROOT 1
-#define ERRO -0x3f3f3f3f
-
-typedef struct max_heap_t
-{
-    int *data;
-    int data_len;
-    int size;
-}max_heap_t;
+#include "max_heap.h"
 
 max_heap_t *new_heap()
 {
@@ -133,13 +122,4 @@ int heap_pop(max_heap_t *mh)
     shift_down(mh, HEAP_ROOT);
     
     return max;
-}
-
-int main()
-{
-    max_heap_t *mh = new_heap();
-    for(int i = 0; i < 20; ++i) heap_push(mh, rand() % 100);
-    for(int i = 0; i < 20; ++i) printf("%d ", heap_pop(mh));
-    free_heap(mh);
-    return 0;
 }

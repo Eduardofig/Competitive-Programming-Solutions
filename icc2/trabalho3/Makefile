@@ -1,4 +1,6 @@
-all: max_heap.c
-	gcc max_heap.c -g -fsanitize=address -o max_heap
-run: max_heap
-	./max_heap
+max_heap.o: max_heap.c
+	gcc -c max_heap.c -o max_heap.o
+all: max_heap.o main.c
+	gcc main.c max_heap.o -g -fsanitize=address -o main
+run: main
+	./main
