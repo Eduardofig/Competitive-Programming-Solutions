@@ -4,7 +4,9 @@ max_heap_t *new_heap()
 {
     max_heap_t *mh = (max_heap_t*)malloc(sizeof(max_heap_t));
 
-    mh->data = (int*)malloc(sizeof(int));
+    mh->data = (process_t**)malloc(sizeof(process_t*));
+    mh->data[0] = NULL;
+
     mh->size = 0;
     mh->data_len = 1;
 
@@ -13,13 +15,16 @@ max_heap_t *new_heap()
 
 void free_heap(max_heap_t *mh)
 {
+    for(int i = 0; i < mh->data_len; ++i) 
+        if(mh->data[i]) free(mh->data[i]);
+
     free(mh->data);
     free(mh);
 }
 
-void swap(int *a, int *b)
+void swap(process_t **a, process_t **b)
 {
-    int tmp = *a;
+    process_t *tmp = *a;
     *a = *b;
     *b = tmp;
 }
@@ -29,9 +34,9 @@ int heap_empty(max_heap_t *mh)
     return mh->size == 0;
 }
 
-int heap_cmp(const int a, const int b)
+int heap_cmp(const process_t *a, const process_t *b)
 {
-    return a > b;
+    return a->priority > b->priority;
 }
 
 int heap_parent(const int i)
@@ -84,11 +89,11 @@ void shift_down(max_heap_t *mh, const int curr)
     }
 }
 
-void heap_push(max_heap_t *mh, int val)
+void heap_push(max_heap_t *mh, process_t *val)
 {
     if(mh->data_len <= mh->size + 1) {
         mh->data_len = (mh->size + 1)*2;
-        int *tmp = (int*)realloc(mh->data, sizeof(int)*(mh->data_len));
+        process_t **tmp = (process_t**)realloc(mh->data, sizeof(process_t*)*(mh->data_len));
 
         if(!tmp) {
             printf("ERRO: Faltou espaco na memoria");
@@ -97,27 +102,29 @@ void heap_push(max_heap_t *mh, int val)
         }
 
         mh->data = tmp;
+
+        for(int i = mh->size + 1; i < mh->data_len; ++i)
+            mh->data[i] = NULL;
     }
 
     mh->data[++mh->size] = val;
     shift_up(mh, mh->size);
 }
 
-int heap_max(max_heap_t *mh)
+process_t *heap_max(max_heap_t *mh)
 {
-    if(heap_empty(mh)) return ERRO;
+    if(heap_empty(mh)) return NULL;
 
     return mh->data[1];
 }
 
-int heap_pop(max_heap_t *mh)
+process_t *heap_pop(max_heap_t *mh)
 {
-    if(heap_empty(mh)) return ERRO;
+    if(heap_empty(mh)) return NULL;
 
-    int max = mh->data[HEAP_ROOT];
+    process_t *max = mh->data[HEAP_ROOT];
 
-    swap(mh->data + HEAP_ROOT, mh->data + mh->size);
-    mh->size--;
+    swap(mh->data + HEAP_ROOT, mh->data + mh->size--);
 
     shift_down(mh, HEAP_ROOT);
     
