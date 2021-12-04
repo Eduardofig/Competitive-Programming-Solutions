@@ -1,3 +1,6 @@
+#ifndef PRIORITY_QUEUE_H
+#define PRIORITY_QUEUE_H
+
 #include "max_heap.h"
 
 #define true 1
@@ -16,3 +19,5 @@ void priority_queue_push(priority_queue_t *pq, process_t *process);
 void free_priority_queue(priority_queue_t *pq);
 priority_queue_t *new_priority_queue();
 bool_t priority_queue_empty(priority_queue_t *pq);
+
+#endif

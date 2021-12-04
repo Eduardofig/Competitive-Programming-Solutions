@@ -22,7 +22,7 @@ void free_heap(max_heap_t *mh)
     free(mh);
 }
 
-void swap(process_t **a, process_t **b)
+static void _swap(process_t **a, process_t **b)
 {
     process_t *tmp = *a;
     *a = *b;
@@ -34,58 +34,58 @@ int heap_empty(max_heap_t *mh)
     return mh->size == 0;
 }
 
-int heap_cmp(const process_t *a, const process_t *b)
+static int _heap_cmp(const process_t *a, const process_t *b)
 {
     return a->priority > b->priority;
 }
 
-int heap_parent(const int i)
+static int _heap_parent(const int i)
 {
     return i >> 1;
 }
 
-int heap_child(int which, int i)
+static int _heap_child(int which, int i)
 {
     return (i << 1) + which;
 }
 
-int heap_contains(max_heap_t *mh, const int curr)
+static int _heap_contains(max_heap_t *mh, const int curr)
 {
     return curr <= mh->size;
 }
 
-int heap_next_child(max_heap_t *mh, const int curr)
+static int _heap_next_child(max_heap_t *mh, const int curr)
 {
     int next = curr, tmp;
 
     for(int i = 0; i < 2; ++i) {
-        tmp = heap_child(i, curr);
-        if(heap_contains(mh, tmp) && heap_cmp(mh->data[tmp], mh->data[next]))
+        tmp = _heap_child(i, curr);
+        if(_heap_contains(mh, tmp) && _heap_cmp(mh->data[tmp], mh->data[next]))
             next = tmp;
     }
 
     return next;
 }
 
-void shift_up(max_heap_t *mh, const int curr)
+static void _shift_up(max_heap_t *mh, const int curr)
 {
-    if(heap_contains(mh, curr) && curr != HEAP_ROOT) {
-        int par = heap_parent(curr);
+    if(_heap_contains(mh, curr) && curr != HEAP_ROOT) {
+        int par = _heap_parent(curr);
 
-        if(heap_cmp(mh->data[curr], mh->data[par]))
-            swap(mh->data + curr, mh->data + par);
+        if(_heap_cmp(mh->data[curr], mh->data[par]))
+            _swap(mh->data + curr, mh->data + par);
 
-        shift_up(mh, par);
+        _shift_up(mh, par);
     }
 }
 
-void shift_down(max_heap_t *mh, const int curr)
+static void _shift_down(max_heap_t *mh, const int curr)
 {
-    int next = heap_next_child(mh, curr);
+    int next = _heap_next_child(mh, curr);
 
     if(next != curr) {
-        swap(mh->data + next, mh->data + curr);
-        shift_down(mh, next);
+        _swap(mh->data + next, mh->data + curr);
+        _shift_down(mh, next);
     }
 }
 
@@ -93,7 +93,7 @@ void heap_push(max_heap_t *mh, process_t *val)
 {
     if(mh->data_len <= mh->size + 1) {
         mh->data_len = (mh->size + 1)*2;
-        process_t **tmp = (process_t**)realloc(mh->data, sizeof(process_t*)*(mh->data_len));
+        process_t **tmp = (process_t**)safe_realloc(mh->data, sizeof(process_t*)*(mh->data_len));
 
         if(!tmp) {
             printf("ERRO: Faltou espaco na memoria");
@@ -108,7 +108,7 @@ void heap_push(max_heap_t *mh, process_t *val)
     }
 
     mh->data[++mh->size] = val;
-    shift_up(mh, mh->size);
+    _shift_up(mh, mh->size);
 }
 
 process_t *heap_max(max_heap_t *mh)
@@ -124,9 +124,9 @@ process_t *heap_pop(max_heap_t *mh)
 
     process_t *max = mh->data[HEAP_ROOT];
 
-    swap(mh->data + HEAP_ROOT, mh->data + mh->size--);
+    _swap(mh->data + HEAP_ROOT, mh->data + mh->size--);
 
-    shift_down(mh, HEAP_ROOT);
+    _shift_down(mh, HEAP_ROOT);
     
     return max;
 }

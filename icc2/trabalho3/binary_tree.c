@@ -1,6 +1,6 @@
 #include "binary_tree.h"
 
-node_t *_new_node(int val)
+static node_t *_new_node(int val)
 {
     node_t *n = (node_t *)malloc(sizeof(node_t));
     n->left = NULL;
@@ -23,7 +23,7 @@ bool_t tree_empty(binary_tree_t *t)
     return t->root == NULL;
 }
 
-void _tree_insert_node(node_t *curr, int val)
+static void _tree_insert_node(node_t *curr, int val)
 {
     if(val > curr->val) {
         if(curr->right) {
@@ -54,7 +54,7 @@ void tree_insert(binary_tree_t *t, int val)
     _tree_insert_node(t->root, val);
 }
 
-bool_t _tree_find_node(node_t *curr, int val)
+static bool_t _tree_find_node(node_t *curr, int val)
 {
     if(val > curr->val && curr->right) return _tree_find_node(curr->right, val);
     if(val < curr->val && curr->left) return _tree_find_node(curr->left, val);
@@ -68,4 +68,18 @@ bool_t tree_find(binary_tree_t *t, int val)
     if(t->root->val == val) return true;
 
     return _tree_find_node(t->root, val);
+}
+
+static void _free_node(node_t *curr)
+{
+    if(curr) {
+        _free_node(curr->left);
+        _free_node(curr->right);
+        free(curr);
+    }
+}
+
+void free_tree(binary_tree_t *t)
+{
+    if(t->root) _free_node(t->root);
 }

@@ -1,3 +1,6 @@
+#ifndef PROCESS_H
+#define PROCESS_H
+
 #include <stdio.h>
 
 #define true 1
@@ -12,3 +15,7 @@ typedef struct process_t
     int remaining_quant;
     int priority;
 } process_t;
+
+process_t *new_process(int code, int entry_quant, int remaining_quant, int priority);
+
+#endif
