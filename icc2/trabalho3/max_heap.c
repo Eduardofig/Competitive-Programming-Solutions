@@ -15,9 +15,6 @@ max_heap_t *new_heap()
 
 void free_heap(max_heap_t *mh)
 {
-    for(int i = 0; i < mh->data_len; ++i) 
-        if(mh->data[i]) free(mh->data[i]);
-
     free(mh->data);
     free(mh);
 }
@@ -36,6 +33,7 @@ int heap_empty(max_heap_t *mh)
 
 static int _heap_cmp(const process_t *a, const process_t *b)
 {
+    if(a->priority == b->priority) return a->code < b->code;
     return a->priority > b->priority;
 }
 

@@ -82,4 +82,5 @@ static void _free_node(node_t *curr)
 void free_tree(binary_tree_t *t)
 {
     if(t->root) _free_node(t->root);
+    free(t);
 }
