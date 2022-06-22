@@ -1,3 +1,3 @@
-Arquivo zip gerado em: 17/10/2021 03:02:25 
+Arquivo zip gerado em: 12/12/2021 19:23:53 
 Este arquivo contém os casos de teste cadastrados até o momento, disponibilizado pelo professor aos alunos.
-Exercício: programacao-dinamica-1
+Exercício: teoria-dos-numeros-2

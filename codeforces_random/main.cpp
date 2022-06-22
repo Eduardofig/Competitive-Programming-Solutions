@@ -2,24 +2,43 @@
 
 using namespace std;
 
-int n;
-string s;
+using ll = long long;
+using ull = unsigned long long;
+
+const int MXN = 2e5 + 3;
+ll p[MXN];
+ll n, q;
 
 void solve()
 {
-    vector<int> nums(3, -n/6);
-    vector<int> sum_nums = {min(2, n % 3), (int)(n % 3 > 0), (int)(n % 3 > 1)};
+    sort(p, p + n);
+    reverse(p, p + n);
 
-    for(char c: s) nums[c - 'A']++;
+    ll pref[n];
+    pref[0] = p[0];
+    for(int i = 1; i < n; ++i) {
+        pref[i] = pref[i - 1] + p[i];
+    }
 
-    transform(nums.begin(), nums.end(), sum_nums.begin(), nums.begin(), plus<int>());
+    ll x, y;
 
-    if(accumulate(nums.begin(), nums.begin() + (n % 3), 0) > 0) cout << "Yes";
-    else cout << "No";
+    for(int i = 0; i < q; ++i) {
+        cin >> x >> y;
+        ll ans = pref[x - 1];
+        if(x > y) {
+            ans -= pref[x - y - 1];
+        }
+
+        cout << ans << '\n';
+    }
 }
 
 int main()
 {
-    cin >> n >> s;
+    cin >> n >> q;
+    for(int i = 0; i < n; ++i) {
+        cin >> p[i];
+    }
+
     solve();
 }

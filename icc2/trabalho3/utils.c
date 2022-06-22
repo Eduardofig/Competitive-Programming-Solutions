@@ -1,3 +1,8 @@
+/* Eduardo Figueiredo Freire Andrade
+ * NUSP: 11232820
+ * Trabalho 3 de icc2:
+ * Simulador de Escalonador de Processos */
+
 #include "utils.h"
 #include <stdlib.h>
 

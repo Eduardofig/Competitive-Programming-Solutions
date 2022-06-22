@@ -1,3 +1,8 @@
+/* Eduardo Figueiredo Freire Andrade
+ * NUSP: 11232820
+ * Trabalho 3 de icc2:
+ * Simulador de Escalonador de Processos */
+
 #include "process.h"
 
 process_t *new_process(int code, int entry_quant, int remaining_quant, int priority)

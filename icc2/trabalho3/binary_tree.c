@@ -1,5 +1,11 @@
+/* Eduardo Figueiredo Freire Andrade
+ * NUSP: 11232820
+ * Trabalho 3 de icc2:
+ * Simulador de Escalonador de Processos */
+
 #include "binary_tree.h"
 
+//Construtor de um no
 static node_t *_new_node(int val)
 {
     node_t *n = (node_t *)malloc(sizeof(node_t));
@@ -23,23 +29,28 @@ bool_t tree_empty(binary_tree_t *t)
     return t->root == NULL;
 }
 
+//Funcao recursive de insercao em elementos em um no
 static void _tree_insert_node(node_t *curr, int val)
 {
     if(val > curr->val) {
         if(curr->right) {
+            //Chamada recursiva para o no da direita
             _tree_insert_node(curr->right, val);
             return;
         }
 
+        //Insere no no da direita
         curr->right = _new_node(val);
     }
 
     if(val < curr->val) {
         if(curr->left) {
+            //Chamada recursiva para o no da esquerda
             _tree_insert_node(curr->left, val);
             return;
         }
 
+        //Insere no no da esquerda
         curr->left = _new_node(val);
     }
 }
@@ -54,6 +65,7 @@ void tree_insert(binary_tree_t *t, int val)
     _tree_insert_node(t->root, val);
 }
 
+//Funcao recursiva de busca em um no
 static bool_t _tree_find_node(node_t *curr, int val)
 {
     if(val > curr->val && curr->right) return _tree_find_node(curr->right, val);

@@ -1,3 +1,8 @@
-g++     main.cpp   -o main
-./main
-604
+512 does not divide 10!
+256 divides 10!
+5040 divides 7!
+2147483647 divides 2147483647!
+2147483647 does not divide 2147483646!
+2147483646 divides 331!
+1 divides 0!
+5 does not divide 0!
