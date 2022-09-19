@@ -57,6 +57,10 @@ void solve()
             }
         }
 
+        for(int i = 0; i < 10; ++i) {
+            cout << i << endl;
+        }
+
         for(int conj = 0; max_abs - 2 * conj > 0; ++conj) {
             abs[i - 1].push_back({max_abs - 2 * conj, conj});
         }

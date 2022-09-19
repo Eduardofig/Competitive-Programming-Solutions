@@ -1,4 +1,6 @@
+
 all: main.cpp
-	g++ segment_tree.cpp -o main
+	g++ main.cpp -o main
 run: main
 	./main
+

@@ -12,32 +12,64 @@ const int MXN = 1e5 + 3;
 const int INF = 0x3f3f3f3f;
 
 int n;
-vector<pair<pair<int, int>, int>> p;
+vector<pair<pair<int, int>, int>> players;
+vector<int> g[MXN];
+vector<int> ans;
+int vis[MXN];
+
+void bfs(int st)
+{
+    memset(vis, false, sizeof vis);
+    queue<int> q;
+    q.push(st);
+
+    while(!q.empty()) {
+        int curr = q.front();
+        q.pop();
+
+        vis[curr] = true;
+        ans[curr] = 1;
+
+        for(int neigh: g[curr]) {
+            if(!vis[neigh]) {
+                q.push(neigh);
+            }
+        }
+    }
+}
  
 void solve()
 {
-    sort(p.begin(), p.end(), [](const auto &a, const auto &b) {
-        return (a.first.first > b.first.first) && (a.first.second > b.first.second);
+    sort(players.begin(), players.end(), [](auto a, auto b) {
+        return a.first.first > b.first.first;
     });
 
+    int k = players.front().second;
 
-    vector<int> ans(n, 0);
+    for(int i = 0; i < n - 1; ++i) {
+        int to = players[i].second;
+        int from = players[i + 1].second;
 
-    for(int i = 0; (i < n - 1) && !((p[i].first.first > p[i + 1].first.first) && (p[i].first.second > p[i + 1].first.second)); ++i) {
-        ans[p[i].second] = 1;
+        g[from].push_back(to);
     }
 
-    cout << "----------------------------------------------------\n";
-    for(auto [ab, i]: p) {
-        cout << i << ' ' << ab.first << ' ' << ab.second << '\n';
+    sort(players.begin(), players.end(), [](auto a, auto b) {
+        return a.first.second > b.first.second;
+    });
+
+    for(int i = 0; i < n - 1; ++i) {
+        int to = players[i].second;
+        int from = players[i + 1].second;
+
+        g[from].push_back(to);
     }
-    cout << "----------------------------------------------------\n";
-/*
-    for(int num: ans) {
-        cout << num << ' ';
+
+    bfs(k);
+
+    for(int i: ans) {
+        cout << i;
     }
     cout << '\n';
-*/
 }
  
 int main()
@@ -50,14 +82,15 @@ int main()
     cin >> t;
     while(t--) {
         cin >> n;
-        p.resize(n);
+        players.resize(n);
+        ans.resize(n, 0);
 
         for(int i = 0; i < n; ++i) {
-            cin >> p[i].first.first;
+            cin >> players[i].first.first;
         }
         for(int i = 0; i < n; ++i) {
-            cin >> p[i].first.second;
-            p[i].second = i;
+            cin >> players[i].first.second;
+            players[i].second = i;
         }
         solve();
     }
