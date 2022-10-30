@@ -1,7 +1,23 @@
 #include <bits/stdc++.h>
-
+ 
 using namespace std;
+ 
+using ui = unsigned int;
+//using l = long;
+using ul = unsigned long;
+using ll = long long;
+using ull = unsigned long long;
+ 
+const int MXN = 2e5 + 3;
+const int INF = 0x3f3f3f3f;
+const int MOD = 1e7 + 9;
 
+int n;
+int l, r;
+//int k;
+vector<int> a(MXN);
+vector<int> cnt(MXN);
+//string s;
 class seg_tree
 {
     private:
@@ -91,13 +107,50 @@ class seg_tree
             this->n = n;
         }
 };
+ 
+int mx = 0;
 
+void solve()
+{
+    vector<int> cnt(mx + 3, 0);
+
+    for(int i = 0; i < n; ++i) {
+        cnt[a[i]]++;
+    }
+
+    seg_tree st(cnt);
+
+    ll ans = 0;
+    for(int i = 0; i < n; ++i) {
+        int k = a[i];
+        int tl = max(l - k, 0);
+        int tr = max(r - k, 0);
+
+        int q = st.query(k, k);
+        st.update(k, max(q - 1, 0));
+
+        ans += st.query(tl, tr);
+    }
+
+    cout << ans << '\n';
+}
+ 
 int main()
 {
-    vector<int> v = {1, 2, 3, 4, 5, 6};
-    seg_tree st(v);
+    ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
 
-    cout << st.query(0, 3) << '\n';
-    st.update(2, 10);
-    cout << st.query(0, 3) << '\n';
+    int t;
+    cin >> t;
+    while(t--) {
+        cin >> n >> l >> r;
+        mx = r + 3;
+        int num;
+        for(int i = 0; i < n; ++i) {
+            cin >> a[i];
+            mx = max(mx, a[i]);
+        }
+        solve();
+    }
 }
