@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+ 
+using namespace std;
+ 
+using ui = unsigned int;
+using l = long;
+using ul = unsigned long;
+using ll = long long;
+using ull = unsigned long long;
+ 
+const int MXN = 2e5 + 3;
+const int INF = 0x3f3f3f3f;
+const int MOD = 1e7 + 9;
+
+ll a, b, x, y, z;
+//int k;
+//int a[MXN];
+//int b[MXN];
+//string s;
+ 
+void solve()
+{
+    ll need_a = 0, need_b = 0;
+
+    need_a += 2 * x + y;
+    need_b += 3 * z + y;
+
+    ll ans = max(need_a - a, 0LL) + max(need_b - b, 0LL);
+    cout << ans << '\n';
+}
+ 
+int main()
+{
+    ios_base::sync_with_stdio(false);
+	cin.tie(nullptr);
+	cout.tie(nullptr);
+
+    cin >> a >> b;
+    cin >> x >> y >> z;
+    solve();
+}
