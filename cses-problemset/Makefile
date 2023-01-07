@@ -1,6 +1,6 @@
 
 all: main.cpp
-	g++ main.cpp -o main
+	g++ main.cpp -std=c++17 -o main
 run: main
 	./main
 
