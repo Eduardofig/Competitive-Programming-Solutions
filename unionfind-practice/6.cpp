@@ -1,8 +1,4 @@
 #include <bits/stdc++.h>
-
-#define For(i, n) for(int i = 0; i < (int)(n); ++i)
-#define Forl(i, n) for(ll i = 0; i < (ll)(n); ++i)
-#define Fore(v, ...) for(auto &[__VA_ARGS__]: v)
  
 using namespace std;
  
@@ -23,18 +19,6 @@ vector<tuple<char, int, int>> qu;
 //int b[MXN];
 //string s;
 
-template<typename T>
-void mini(T &a, T b)
-{
-    a = min(a, b);
-}
-
-template<typename T>
-void maxi(T &a, T b)
-{
-    a = max(a, b);
-}
-
 struct unionfind
 {
     vector<int> par, sz, mn;
@@ -45,7 +29,7 @@ struct unionfind
         sz.resize(n);
         mn.resize(n);
 
-        For(u, n) {
+        for(int u = 0; u < n; u++) {
             par[u] = u;
             sz[u] = 1;
             mn[u] = p[u];
@@ -61,7 +45,7 @@ struct unionfind
         const auto &[parent, pmn] = find(par[u]);
 
         par[u] = parent;
-        mini(mn[u], pmn);
+        mn[u] = min(mn[u], pmn);
 
         return {par[u], mn[u]};
     }
@@ -77,7 +61,7 @@ void solve()
 {
     unionfind uf(MXN);
 
-    Fore(qu, op, u, v) {
+    for(auto &[op, u, v]: qu) {
         // cout << op << ' ';
         if(op == '+') {
             uf.unite(u, v);
@@ -90,13 +74,13 @@ void solve()
 void read()
 {
     cin >> n >> m;
-    For(i, n) {
+    for(int i = 0; i < n; i++) {
         cin >> p[i];
     }
 
     qu.resize(m);
 
-    Fore(qu, op, u, v) {
+    for(auto &[op, u, v]: qu) {
         cin >> op >> u;
         u--;
         if(op == '+') {

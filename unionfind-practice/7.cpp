@@ -1,8 +1,4 @@
 #include <bits/stdc++.h>
-
-#define For(i, n) for(int i = 0; i < (int)(n); ++i)
-#define Forl(i, n) for(ll i = 0; i < (ll)(n); ++i)
-#define Fore(v, ...) for(auto &[__VA_ARGS__]: v)
  
 using namespace std;
  
@@ -45,7 +41,7 @@ struct unionfind
         sz.resize(n);
         mn.resize(n);
 
-        For(u, n) {
+        for(int u = 0; u < n; u++) {
             par[u] = u;
             sz[u] = 1;
             mn[u] = p[u];
@@ -77,7 +73,7 @@ void solve()
 {
     unionfind uf(MXN);
 
-    Fore(qu, op, u, v) {
+    for(auto &[op, u, v]: qu) {
         // cout << op << ' ';
         if(op == '+') {
             uf.unite(u, v);
@@ -90,13 +86,13 @@ void solve()
 void read()
 {
     cin >> n >> m;
-    For(i, n) {
+    for(int i = 0; i < n; i++) {
         cin >> p[i];
     }
 
     qu.resize(m);
 
-    Fore(qu, op, u, v) {
+    for(auto &[op, u, v]: qu) {
         cin >> op >> u;
         u--;
         if(op == '+') {
