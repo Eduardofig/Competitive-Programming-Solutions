@@ -1,0 +1,122 @@
+#include <bits/stdc++.h>
+ 
+using namespace std;
+ 
+using ui = unsigned int;
+using ul = unsigned long;
+using ll = long long;
+using ull = unsigned long long;
+ 
+const int MXN = 2e5 + 3;
+const int INF = 0x3f3f3f3f;
+
+const bool MULTIPLE_TESTCASES = 0;
+
+int n, m, q;
+//int a[MXN];
+//int b[MXN];
+//string s;
+
+struct unionfind_partial
+{
+    vector<int> par, sz, time;
+    
+    unionfind_partial(int n)
+    {
+        par.resize(n);
+        sz.resize(n);
+        time.resize(n);
+    
+        for(int u = 0; u < n; u++) {
+            par[u] = u;
+            sz[u] = 1;
+            time[u] = 0;
+        }
+    }
+    
+    int find(int u, int t)
+    {
+        if(par[u] == u || time[u] > t) {
+            return u;
+        }
+
+        return find(par[u], t);
+    }
+    
+    void unite(int u, int v, int t)
+    {
+        u = find(u, t);
+        v = find(v, t);
+    
+        if(u != v) {
+            if(sz[u] > sz[v]) {
+                swap(u, v);
+            }
+
+            par[u] = v;
+            time[u] = t;
+            sz[v] += sz[u];
+        }
+
+    }
+};
+
+vector<pair<int, int>> qu;
+
+void solve()
+{
+    unionfind_partial ufp(MXN);
+
+    for(int day = 1; m - day + 1 >= 1; ++day) {
+        int from = m - day + 1;
+        for(int to = from; to <= n; to += from) {
+            ufp.unite(from, to, day);
+        }
+    }
+
+    for(auto &[a, b]: qu) {
+        int high = m, low = 1;
+
+        while(high > low) {
+            int mid = low + (high - low) / 2;
+
+            if(ufp.find(a, mid) == ufp.find(b, mid)) {
+                high = mid;
+            } else {
+                low = mid + 1;
+            } 
+
+        }
+
+        cout << high << '\n';
+    }
+}
+
+void read()
+{
+    cin >> n >> m >> q;
+    qu.resize(q);
+
+    for(auto &[a, b]: qu) {
+        cin >> a >> b;
+    }
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    if(MULTIPLE_TESTCASES) {
+        int t;
+        cin >> t;
+        while(t--) {
+            read();
+            solve();
+        }
+    } else {
+        read();
+        solve();
+    }
+}
