@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+// jose artemio
 
 class seg_tree
 {

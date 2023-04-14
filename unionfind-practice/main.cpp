@@ -3,6 +3,7 @@
 #define For(i, n) for(int i = 0; i < (int)(n); ++i)
 #define Forl(i, n) for(ll i = 0; i < (ll)(n); ++i)
 #define Fore(v, ...) for(auto &[__VA_ARGS__]: v)
+#define All(x) (x).begin(), (x).end()
  
 using namespace std;
  
@@ -17,11 +18,18 @@ const int INF = 0x3f3f3f3f;
 const bool MULTIPLE_TESTCASES = 0;
 
 int n, m;
-int p[MXN];
+vector<int> p;
 vector<tuple<char, int, int>> qu;
 //int a[MXN];
 //int b[MXN];
 //string s;
+
+int nxt()
+{
+    int x;
+    cin >> x;
+    return x;
+}
 
 template<typename T>
 void mini(T &a, T b)
@@ -39,16 +47,14 @@ struct unionfind
 {
     vector<int> par, sz, mn;
 
-    unionfind(int n)
+    unionfind(int n): par(n), sz(n, 1), mn(n)
     {
-        par.resize(n);
-        sz.resize(n);
-        mn.resize(n);
+        iota(All(par), 0);
 
         For(u, n) {
-            par[u] = u;
-            sz[u] = 1;
-            mn[u] = p[u];
+            if(u < p.size()) {
+                mn[u] = p[u];
+            }
         }
     }
 
@@ -66,12 +72,12 @@ struct unionfind
         return {par[u], mn[u]};
     }
 
-
     void unite(int u, int v)
     {
         par[v] = u;
     }
 };
+
 
 void solve()
 {
@@ -89,19 +95,16 @@ void solve()
 
 void read()
 {
-    cin >> n >> m;
-    For(i, n) {
-        cin >> p[i];
-    }
+    p.resize(nxt());
+    qu.resize(nxt());
 
-    qu.resize(m);
+    generate(All(p), nxt);
 
     Fore(qu, op, u, v) {
-        cin >> op >> u;
-        u--;
+        cin >> op;
+        u = nxt() - 1;
         if(op == '+') {
-            cin >> v;
-            v--;
+            v = nxt() - 1;
         }
     }
 }
