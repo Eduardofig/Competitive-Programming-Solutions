@@ -206,6 +206,7 @@ vector<int> par(MXN);
 map<int, vector<int>> mp;
 map<int, int> idx;
 map<int, unique_ptr<seg_tree>> mpseg;
+map<int, int> edge_node;
 
 vector<bool> vis_heavy(MXN);
 vector<bool> vis(MXN);
@@ -284,8 +285,6 @@ void update(int u, int new_u)
 {
     mpseg[who[u]]->update(idx[u], new_u);
 }
-
-map<int, int> edge_node;
 
 int main(int argc, char *argv[])
 {
