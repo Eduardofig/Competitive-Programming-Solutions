@@ -12,15 +12,17 @@
 #define Eb emplace_back
 #define Lb(x, y) lower_bound(x, (y))
 #define Ub(x, y) upper_bound(x, (y))
-#define Rz(x, y) resize((x), (y))
+#define Rz(x) resize((x))
+#define Rzz(x, y) resize((x), (y))
 #define Read(x) generate(All((x)), nxt)
 #define Pr(x) cout << (x) << ' '
 #define Prn(x) cout << (x) << '\n'
+#define Has(x, y) ((x).find(y) != (x).end())
 
 // #define int ll
- 
+
 using namespace std;
- 
+
 using ll = long long;
 using ull = unsigned long long;
 using ii = pair<int, int>;
@@ -36,9 +38,11 @@ using vii = vector<ii>;
 using vvii = vector<vii>;
 using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
- 
+using vb = vector<bool>;
+using vvb = vector<vb>;
+
 const int MXN = 5e5 + 100;
-const int INF = 0x3f3f3f3f;
+const int INF = INT_MAX;
 
 const bool MULTIPLE_TESTCASES = 0;
 
@@ -49,29 +53,10 @@ int n, m;
 vvi g(MXN, vi());
 // string s;
 
-vvi cost(15, vi(10, 0));
-vi has(10);
+vi c;
+vi p;
 
-vector<bool> isleaf(MXN, false);
-vector<bool> vis(MXN, false);
-
-void dfs(int u)
-{
-	if(isleaf[u]) {
-		cost[u][u] = 1;
-		return;
-	}
-
-	for(int v: g[u]) {
-		if(!vis[v]) {
-			dfs(v);
-		}
-
-		for(int i = 0; i < 10; ++i) {
-			cost[u][i] += cost[v][i];
-		}
-	}
-}
+vvi ids;
 
 ll nxt()
 {
@@ -80,34 +65,64 @@ ll nxt()
     return x;
 }
 
+vi raw;
+vvb vis(10, vb(MXN, false));
+vvi need(10, vi(MXN, 0));
+
+void dfs(int r, int u)
+{
+    vis[r][u] = true;
+
+    for(int v: g[u]) {
+        if(!vis[r][v]) {
+            dfs(r, v);
+        }
+
+        need[r][u] += need[r][v];
+    }
+}
+
 void solve()
 {
+    for(int i = 0; i < n; ++i) {
+        for(int r: raw) {
+            dfs(r, i);
+        }
+    }
+
     int ans = 0;
-	for(int subs = 0; subs < (1 << n); ++subs) {
-		vi curr_cost(10, 0);
-		for(int mask = 0; mask < n; ++mask) {
-			if(mask & subs) {
-				for(int i = 0; i < 10; ++i) {
-					curr_cost[i] += cost[mask][i];
-				}
-			}
-		}
-
-		bool ok = true;
-		for(int i = 0; i < 10; ++i) {
-			ok = ok and curr_cost[i] <= has[i];
-		}
-
-		if(ok) {
-			Maxi(ans, __builtin_popcount(subs));
-		}
-	}
-
-	cout << ans << '\n';
+    for(int subs = 0; subs < (1 << n); ++subs) {
+        bool ok = true;
+        for(int mask = 0; mask < n; ++mask) {
+            if(mask & ans) {
+                for(int r: raw) {
+                }
+            }
+        }
+    }
 }
 
 void read()
 {
+    cin >> n >> m;
+    c.Rz(m);
+    p.Rz(m);
+
+
+    For(u, m) {
+        cin >> c[u];
+
+        if(c[u] == 0) {
+            cin >> p[u];
+            raw.Pb(u);
+        } else {
+            For(j, c[u]) {
+                int v = nxt() - 1;
+                g[u].Pb(v);
+            }
+        }
+    }
+
 }
 
 int32_t main()

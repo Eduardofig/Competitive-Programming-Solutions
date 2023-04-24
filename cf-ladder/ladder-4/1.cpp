@@ -17,9 +17,8 @@
 #define Read(x) generate(All((x)), nxt)
 #define Pr(x) cout << (x) << ' '
 #define Prn(x) cout << (x) << '\n'
-#define Has(x, y) ((x).find(y) != (x).end())
 
-#define int ll
+// #define int ll
 
 using namespace std;
 
@@ -44,12 +43,15 @@ const int INF = INT_MAX;
 
 const bool MULTIPLE_TESTCASES = 0;
 
-int n, k;
-vi a;
+int n, m;
+// vi a(MXN);
 // vi b(MXN);
 // vi v(MXN);
 // vvi g(MXN, vi());
 // string s;
+
+map<string, int> mp1, mp2;
+vector<pair<string, int>> events;
 
 ll nxt()
 {
@@ -58,51 +60,49 @@ ll nxt()
     return x;
 }
 
-set<int> vis;
-set<int> elem;
-int ans = 0;
-
-int dfs(int u)
-{
-    int tot = 1;
-
-    vis.insert(u);
-
-    if(Has(elem, u * k) && !Has(vis, u * k)) {
-        tot += dfs(u * k);
-    }
-
-    if(u % k == 0 && Has(elem, u / k) && !Has(vis, u / k)) {
-        tot += dfs(u / k);
-    }
-
-    return tot;
-}
-
 void solve()
 {
-    for(int i: a) {
-        elem.insert(i);
+    Fore(events, name, p) {
+        mp1[name] += p;
     }
 
-    int ans = 0;
-    for(int i: a) {
-        if(!Has(vis, i)) {
-            int curr = dfs(i);
+    int mx = -INF;
+    int cnt = 0;
+    string winner;
 
-            ans += curr / 2 + curr % 2;
+    Fore(mp1, name, p) {
+        Maxi(mx, p);
+    }
+
+    set<string> winners;
+    Fore(mp1, name, p) {
+        if(p == mx) {
+            winners.insert(name);
         }
     }
 
-    Prn(ans);
+    if(winners.size() == 1) {
+        Prn(*winners.begin());
+        return;
+    }
+
+    Fore(events, name, p) {
+        mp2[name] += p;
+        if(mp2[name] >= mx and winners.find(name) != winners.end()) {
+            Prn(name);
+            return;
+        }
+    }
+
 }
 
 void read()
 {
-    cin >> n >> k;
-    a.Rz(n);
-
-    Read(a);
+    cin >> n;
+    events.Rz(n);
+    Fore(events, name, p) {
+        cin >> name >> p;
+    }
 }
 
 int32_t main()
