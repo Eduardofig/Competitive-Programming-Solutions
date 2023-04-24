@@ -1,9 +1,9 @@
 #include <bits/stdc++.h>
 
-#define For(i, n) for(int (i) = 0; (i) < (int)(n); ++(i))
-#define Foro(i, n) for(int (i) = 1; (i) < (int)(n); ++(i))
-#define Forr(i, n) for(int (i) = (int)(n) - 1; (i) >= 0; --(i))
-#define Forl(i, n) for(ll (i) = 0; (i) < (ll)(n); ++(i))
+#define For(i, n) for(int i = 0; i < (int)(n); ++i)
+#define Foro(i, n) for(int i = 1; i < (int)(n); ++i)
+#define Forr(i, n) for(int i = (int)(n) - 1; i >= 0; --i)
+#define Forl(i, n) for(ll i = 0; i < (ll)(n); ++i)
 #define Fore(v, ...) for(auto &[__VA_ARGS__]: (v))
 #define All(x) (x).begin(), (x).end()
 #define Mini(x, y) (x) = min((x), (y))
@@ -12,16 +12,15 @@
 #define Eb emplace_back
 #define Lb(x, y) lower_bound(x, (y))
 #define Ub(x, y) upper_bound(x, (y))
-#define Rz(x) resize((x))
-#define Rzz(x, y) resize((x), (y))
+#define Rz(x, y) resize((x), (y))
 #define Read(x) generate(All((x)), nxt)
 #define Pr(x) cout << (x) << ' '
 #define Prn(x) cout << (x) << '\n'
 
-#define int ll
- 
+// #define int ll
+
 using namespace std;
- 
+
 using ll = long long;
 using ull = unsigned long long;
 using ii = pair<int, int>;
@@ -37,18 +36,20 @@ using vii = vector<ii>;
 using vvii = vector<vii>;
 using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
- 
-const int MXN = 5e5 + 100;
-const int INF = INT_MAX;
+
+const int MXN = 1e4 + 100;
+const int INF = 0x3f3f3f3f;
 
 const bool MULTIPLE_TESTCASES = 0;
 
 int n, m;
-vi a(MXN);
+// vi a(MXN);
 // vi b(MXN);
 // vi v(MXN);
 // vvi g(MXN, vi());
 // string s;
+string l, r;
+int x;
 
 ll nxt()
 {
@@ -57,55 +58,53 @@ ll nxt()
     return x;
 }
 
-bool cmp(int a, int b)
-{
-    int cnt3a = 0;
-    int cnt3b = 0;
-    int cnt2a = 0;
-    int cnt2b = 0;
-
-    while(a % 3 == 0) {
-        a /= 3;
-        cnt3a++;
-    }
-
-    while(b % 3 == 0) {
-        b /= 3;
-        cnt3b++;
-    }
-
-    while(a % 2 == 0) {
-        a /= 2;
-        cnt2a++;
-    }
-
-    while(b % 2 == 0) {
-        b /= 2;
-        cnt2b++;
-    }
-
-    if(cnt3a == cnt3b) {
-        return cnt2a < cnt2b;
-    }
-
-    return cnt3a > cnt3b;
-}
-
 void solve()
 {
-    sort(All(a), cmp);
+    // r.Rz(MXN, 0);
+    // l.Rz(MXN, 0);
 
-    for(int i: a) {
-        Pr(i);
+    n = r.size();
+
+    vvvi dp(MXN, vvi(2, vi(MXN, 0)));
+    vvvi dp2(MXN, vvi(2, vi(MXN, 0)));
+
+    fill(All(dp[0]), vi(MXN, 1));
+    fill(All(dp2[0]), vi(MXN, 1));
+
+    For(i, n) {
+        For(tight, 2) {
+            For(sum, x) {
+                For(d, tight) {
+                    if(sum + d <= x) {
+                        Prn("here");
+                        dp[i + 1][tight && (d == r[i + 1] - 'a')][sum + d] += dp[i][tight][sum];
+
+                        if(d < l[i + 1] - 'a' || !tight) {
+                            dp2[i + 1][tight && (d == l[i + 1] - 'a')][sum + d] += dp2[i][tight][sum];
+                        }
+                    }
+
+                }
+            }
+        }
     }
-    Prn("");
+
+    ll ans = 0;
+    For(i, n) {
+        For(tight, 2) {
+            ans += dp[i][tight][x];
+            ans -= dp2[i][tight][x];
+        }
+    }
+
+    Prn(ans);
+
 }
+
 
 void read()
 {
-    cin >> n;
-    a.Rz(n);
-    Read(a);
+    cin >> l >> r >> x;
 }
 
 int32_t main()

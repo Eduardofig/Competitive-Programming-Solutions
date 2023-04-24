@@ -12,16 +12,15 @@
 #define Eb emplace_back
 #define Lb(x, y) lower_bound(x, (y))
 #define Ub(x, y) upper_bound(x, (y))
-#define Rz(x) resize((x))
-#define Rzz(x, y) resize((x), (y))
+#define Rz(x, y) resize((x), (y))
 #define Read(x) generate(All((x)), nxt)
 #define Pr(x) cout << (x) << ' '
 #define Prn(x) cout << (x) << '\n'
 
-#define int ll
- 
+// #define int ll
+
 using namespace std;
- 
+
 using ll = long long;
 using ull = unsigned long long;
 using ii = pair<int, int>;
@@ -37,14 +36,14 @@ using vii = vector<ii>;
 using vvii = vector<vii>;
 using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
- 
+
 const int MXN = 5e5 + 100;
-const int INF = INT_MAX;
+const int INF = 0x3f3f3f3f;
 
 const bool MULTIPLE_TESTCASES = 0;
 
-int n, m;
-vi a(MXN);
+int c, r;
+// vi a(MXN);
 // vi b(MXN);
 // vi v(MXN);
 // vvi g(MXN, vi());
@@ -57,55 +56,63 @@ ll nxt()
     return x;
 }
 
-bool cmp(int a, int b)
-{
-    int cnt3a = 0;
-    int cnt3b = 0;
-    int cnt2a = 0;
-    int cnt2b = 0;
-
-    while(a % 3 == 0) {
-        a /= 3;
-        cnt3a++;
-    }
-
-    while(b % 3 == 0) {
-        b /= 3;
-        cnt3b++;
-    }
-
-    while(a % 2 == 0) {
-        a /= 2;
-        cnt2a++;
-    }
-
-    while(b % 2 == 0) {
-        b /= 2;
-        cnt2b++;
-    }
-
-    if(cnt3a == cnt3b) {
-        return cnt2a < cnt2b;
-    }
-
-    return cnt3a > cnt3b;
-}
-
 void solve()
 {
-    sort(All(a), cmp);
-
-    for(int i: a) {
-        Pr(i);
+    if(r == c and c == 1) {
+        Prn(0);
+        return;
     }
-    Prn("");
+
+    vvi ans(r, vi(c, 1));
+    int curr = 1;
+
+    if(r == 1) {
+        curr++;
+        For(i, c) {
+            Pr(curr++);
+        }
+        Prn("");
+
+        return;
+    }
+
+    if(c == 1) {
+        curr++;
+        For(j, r) {
+            Prn(curr++);
+        }
+
+        return;
+    }
+
+
+
+    For(i, r) {
+        For(j, c) {
+            ans[i][j] *= curr;
+        }
+        curr++;
+    }
+
+    For(j, c) {
+        For(i, r) {
+            ans[i][j] *= curr;
+        }
+        curr++;
+    }
+
+    For(i, r) {
+        For(j, c) {
+            Pr(ans[i][j]);
+        }
+        Prn("");
+    }
+
 }
 
 void read()
 {
-    cin >> n;
-    a.Rz(n);
-    Read(a);
+    cin >> r >> c;
 }
 
 int32_t main()

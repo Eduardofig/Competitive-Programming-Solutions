@@ -18,7 +18,7 @@
 #define Pr(x) cout << (x) << ' '
 #define Prn(x) cout << (x) << '\n'
 
-#define int ll
+// #define int ll
  
 using namespace std;
  
@@ -39,12 +39,14 @@ using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
  
 const int MXN = 5e5 + 100;
-const int INF = INT_MAX;
+const int INF = 0x3f3f3f3f;
 
 const bool MULTIPLE_TESTCASES = 0;
 
-int n, m;
-vi a(MXN);
+int n, m, k;
+vi l, r;
+map<int, int> diff;
+// vi a(MXN);
 // vi b(MXN);
 // vi v(MXN);
 // vvi g(MXN, vi());
@@ -57,55 +59,46 @@ ll nxt()
     return x;
 }
 
-bool cmp(int a, int b)
-{
-    int cnt3a = 0;
-    int cnt3b = 0;
-    int cnt2a = 0;
-    int cnt2b = 0;
-
-    while(a % 3 == 0) {
-        a /= 3;
-        cnt3a++;
-    }
-
-    while(b % 3 == 0) {
-        b /= 3;
-        cnt3b++;
-    }
-
-    while(a % 2 == 0) {
-        a /= 2;
-        cnt2a++;
-    }
-
-    while(b % 2 == 0) {
-        b /= 2;
-        cnt2b++;
-    }
-
-    if(cnt3a == cnt3b) {
-        return cnt2a < cnt2b;
-    }
-
-    return cnt3a > cnt3b;
-}
-
 void solve()
 {
-    sort(All(a), cmp);
+	int first = 0;
+	for(int i = 0; i < n; ++i) {
+		if(r[i] - l[i] + 1 >= k) {
+			diff[0]++;
+		} else {
+			r[i] %= k;
+			l[i] %= k;
+			if(r[i] >= l[i]) {
+				diff[r[i] + 1]--;
+				diff[l[i]]++;
+			} else {
+				diff[0]++;
+				diff[r[i] + 1]--;
+				diff[l[i]]++;
+			}
+		} 
+	}
 
-    for(int i: a) {
-        Pr(i);
-    }
-    Prn("");
+	int curr = first;
+	int ans = curr;
+	for(auto [day, val]: diff) {
+		curr += val;
+		Maxi(ans, curr);
+	}
+
+	cout << ans << '\n';
 }
 
 void read()
 {
-    cin >> n;
-    a.Rz(n);
-    Read(a);
+	 cin >> n >> k;
+	 l.Rz(n);
+	 r.Rz(n);
+	 for(int i = 0; i < n; ++i) {
+		  cin >> l[i] >> r[i];
+		  l[i]--;
+		  r[i]--;
+	 }
 }
 
 int32_t main()
