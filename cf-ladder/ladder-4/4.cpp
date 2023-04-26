@@ -20,9 +20,9 @@
 #define Has(x, y) ((x).find(y) != (x).end())
 
 // #define int ll
- 
+
 using namespace std;
- 
+
 using ll = long long;
 using ull = unsigned long long;
 using ii = pair<int, int>;
@@ -38,7 +38,9 @@ using vii = vector<ii>;
 using vvii = vector<vii>;
 using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
- 
+using vb = vector<bool>;
+using vvb = vector<vb>;
+
 const int MXN = 5e5 + 100;
 const int INF = INT_MAX;
 
@@ -60,10 +62,44 @@ ll nxt()
 
 void solve()
 {
+    if(n < 4) {
+        Prn("NO");
+        return;
+    }
+    Prn("YES");
+
+    if(n == 4) {
+        Prn("1 * 2 = 2");
+        Prn("2 * 3 = 6");
+        Prn("6 * 4 = 24");
+        return;
+    }
+
+    if(n == 5) {
+        Prn("5 * 4 = 20");
+        Prn("3 - 1 = 2");
+        Prn("2 + 2 = 4");
+        Prn("20 + 4 = 24");
+        return;
+    }
+
+    Prn("5 - 6 = -1");
+    Prn("-1 + 1 = 0");
+
+    Prn("2 * 3 = 6");
+    Prn("6 * 4 = 24");
+
+    for(int i = 7; i <= n; ++i) {
+        cout << "0 * " << i << " = 0\n";
+    }
+
+    Prn("24 + 0 = 24");
+
 }
 
 void read()
 {
+    cin >> n;
 }
 
 int32_t main()

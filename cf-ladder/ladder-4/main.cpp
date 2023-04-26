@@ -19,10 +19,10 @@
 #define Prn(x) cout << (x) << '\n'
 #define Has(x, y) ((x).find(y) != (x).end())
 
-#define int ll
-
+// #define int ll
+ 
 using namespace std;
-
+ 
 using ll = long long;
 using ull = unsigned long long;
 using ii = pair<int, int>;
@@ -38,14 +38,16 @@ using vii = vector<ii>;
 using vvii = vector<vii>;
 using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
-
+using vb = vector<bool>;
+using vvb = vector<vb>;
+ 
 const int MXN = 5e5 + 100;
 const int INF = INT_MAX;
 
 const bool MULTIPLE_TESTCASES = 0;
 
-int n, k;
-vi a;
+int n, m;
+// vi a(MXN);
 // vi b(MXN);
 // vi v(MXN);
 // vvi g(MXN, vi());
@@ -58,51 +60,12 @@ ll nxt()
     return x;
 }
 
-set<int> vis;
-set<int> elem;
-int ans = 0;
-
-int dfs(int u)
-{
-    int tot = 1;
-
-    vis.insert(u);
-
-    if(Has(elem, u * k) && !Has(vis, u * k)) {
-        tot += dfs(u * k);
-    }
-
-    if(u % k == 0 && Has(elem, u / k) && !Has(vis, u / k)) {
-        tot += dfs(u / k);
-    }
-
-    return tot;
-}
-
 void solve()
 {
-    for(int i: a) {
-        elem.insert(i);
-    }
-
-    int ans = 0;
-    for(int i: a) {
-        if(!Has(vis, i)) {
-            int curr = dfs(i);
-
-            ans += curr / 2 + curr % 2;
-        }
-    }
-
-    Prn(ans);
 }
 
 void read()
 {
-    cin >> n >> k;
-    a.Rz(n);
-
-    Read(a);
 }
 
 int32_t main()

@@ -20,9 +20,9 @@
 #define Has(x, y) ((x).find(y) != (x).end())
 
 // #define int ll
- 
+
 using namespace std;
- 
+
 using ll = long long;
 using ull = unsigned long long;
 using ii = pair<int, int>;
@@ -38,13 +38,15 @@ using vii = vector<ii>;
 using vvii = vector<vii>;
 using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
- 
+using vb = vector<bool>;
+using vvb = vector<vb>;
+
 const int MXN = 5e5 + 100;
-const int INF = INT_MAX;
+const ll INF = LONG_LONG_MAX;
 
 const bool MULTIPLE_TESTCASES = 0;
 
-int n, m;
+ull l, r, k;
 // vi a(MXN);
 // vi b(MXN);
 // vi v(MXN);
@@ -58,12 +60,58 @@ ll nxt()
     return x;
 }
 
+ll binexp(ll k, ll p)
+{
+    int curr = 1;
+
+    while(p > 0) {
+        if(p % 2 == 1) {
+            curr *= k;
+        }
+
+        k *= k;
+        p /= 2;
+    }
+
+    return curr;
+
+}
+
 void solve()
 {
+    ull curr = 1;
+
+    while(curr < l) {
+        if(k > ULLONG_MAX / curr) {
+            Prn(-1);
+            return;
+        }
+        curr *= k;
+    }
+
+
+    bool printed = false;
+    while(curr <= r) {
+        Pr(curr);
+        printed = true;
+
+        if(k > ULLONG_MAX / curr) {
+            break;
+        }
+
+        curr *= k;
+    }
+
+    if(!printed) {
+        Pr(-1);
+    }
+
+    Prn("");
 }
 
 void read()
 {
+    cin >> l >> r >> k;
 }
 
 int32_t main()

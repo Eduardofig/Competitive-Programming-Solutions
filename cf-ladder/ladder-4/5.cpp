@@ -20,9 +20,9 @@
 #define Has(x, y) ((x).find(y) != (x).end())
 
 // #define int ll
- 
+
 using namespace std;
- 
+
 using ll = long long;
 using ull = unsigned long long;
 using ii = pair<int, int>;
@@ -38,7 +38,9 @@ using vii = vector<ii>;
 using vvii = vector<vii>;
 using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
- 
+using vb = vector<bool>;
+using vvb = vector<vb>;
+
 const int MXN = 5e5 + 100;
 const int INF = INT_MAX;
 
@@ -58,12 +60,76 @@ ll nxt()
     return x;
 }
 
+vb vis(MXN, false);
+
+const int MXSPF = 1e5;
+
+int spf[MXSPF];
+
+void sievespf()
+{
+    spf[1] = 1;
+
+    for(int i = 2; i < MXSPF; ++i) {
+        spf[i] = i;
+    }
+
+    for(int i = 4; i < MXSPF; i += 2) {
+        spf[i] = 2;
+    }
+
+    for(int i = 3; i * i < MXSPF; ++i) {
+        if(spf[i] == i) {
+            for(int j = i * i; j < MXSPF; j += i) {
+                if(spf[j] == j) {
+                    spf[j] = i;
+                }
+            }
+        }
+    }
+}
+
+vector<int> factor(int x)
+{
+    vector<int> factors;
+    while(x != 1) {
+        factors.push_back(spf[x]);
+        x = x / spf[x];
+    }
+    return factors;
+}
+
 void solve()
 {
+    if(n == 1) {
+        Prn(0);
+        return;
+    }
+
+    sievespf();
+
+    set<int> ans;
+
+    for(int i = 2; i <= n; ++i) {
+        for(int fact: factor(i)) {
+            int og = fact;
+            while(fact <= n && !Has(ans, fact)) {
+                ans.insert(fact);
+                fact *= og;
+            }
+        }
+    }
+
+    Prn(ans.size());
+    for(int i: ans) {
+        Pr(i);
+    }
+    Prn("");
 }
 
 void read()
 {
+    cin >> n;
 }
 
 int32_t main()

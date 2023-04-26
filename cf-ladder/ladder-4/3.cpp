@@ -19,10 +19,10 @@
 #define Prn(x) cout << (x) << '\n'
 #define Has(x, y) ((x).find(y) != (x).end())
 
-// #define int ll
- 
+#define int ll
+
 using namespace std;
- 
+
 using ll = long long;
 using ull = unsigned long long;
 using ii = pair<int, int>;
@@ -38,7 +38,9 @@ using vii = vector<ii>;
 using vvii = vector<vii>;
 using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
- 
+using vb = vector<bool>;
+using vvb = vector<bool>;
+
 const int MXN = 5e5 + 100;
 const int INF = INT_MAX;
 
@@ -51,6 +53,8 @@ int n, m;
 // vvi g(MXN, vi());
 // string s;
 
+vi a;
+
 ll nxt()
 {
     ll x;
@@ -58,12 +62,44 @@ ll nxt()
     return x;
 }
 
+vvi dp(MXN, vi(2, 0));
+
+map<int, int> cnt;
+
 void solve()
 {
+    vi newa;
+
+    sort(All(a));
+
+    for(int i: a) {
+        cnt[i]++;
+        if(newa.empty() || i != newa.back()) {
+            newa.Pb(i);
+        }
+    }
+
+    n = newa.size();
+
+    sort(All(newa));
+
+    For(i, n) {
+        For(j, 2) {
+            if(!(i > 0 && (j == 1 && newa[i - 1] == newa[i] - 1))) {
+                Maxi(dp[i + 1][1], dp[i][j] + newa[i] * cnt[newa[i]]);
+            }
+            Maxi(dp[i + 1][0], dp[i][j]);
+        }
+    }
+
+    Prn(max(dp[n][0], dp[n][1]));
 }
 
 void read()
 {
+    cin >> n;
+    a.Rz(n);
+    Read(a);
 }
 
 int32_t main()

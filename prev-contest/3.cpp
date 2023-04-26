@@ -19,10 +19,10 @@
 #define Prn(x) cout << (x) << '\n'
 #define Has(x, y) ((x).find(y) != (x).end())
 
-// #define int ll
- 
+#define int ll
+
 using namespace std;
- 
+
 using ll = long long;
 using ull = unsigned long long;
 using ii = pair<int, int>;
@@ -38,7 +38,9 @@ using vii = vector<ii>;
 using vvii = vector<vii>;
 using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
- 
+using vb = vector<bool>;
+using vvb = vector<vb>;
+
 const int MXN = 5e5 + 100;
 const int INF = INT_MAX;
 
@@ -48,8 +50,15 @@ int n, m;
 // vi a(MXN);
 // vi b(MXN);
 // vi v(MXN);
-// vvi g(MXN, vi());
+vvi g(MXN, vi());
 // string s;
+
+vi c;
+vi has;
+
+vvi ids;
+vvi need(MXN, vi(10, 0));
+vb vis(MXN, false);
 
 ll nxt()
 {
@@ -58,12 +67,74 @@ ll nxt()
     return x;
 }
 
+void dfs(int u)
+{
+    vis[u] = true;
+
+    for(int v: g[u]) {
+        if(!vis[v]) {
+            dfs(v);
+        }
+
+        For(r, 10) {
+            need[u][r] = min((int)1e8 + 30, need[u][r] + need[v][r]);
+        }
+    }
+}
+
 void solve()
 {
+    For(u, n) {
+        dfs(u);
+    }
+
+    int ans = 0;
+    For(sub, (1 << n)) {
+        vi needcurr(10, 0);
+        int tot = 0;
+        For(mask, n) {
+            if((1 << mask) & sub) {
+                tot++;
+                For(r, 10) {
+                    needcurr[r] += need[mask][r];
+                }
+            }
+        }
+
+        bool ok = true;
+        For(r, 10) {
+            ok = ok && (needcurr[r] <= has[r]);
+        }
+
+        if(ok) {
+            Maxi(ans, tot);
+        }
+    }
+
+    Prn(ans);
 }
 
 void read()
 {
+    cin >> n >> m;
+    c.Rz(m);
+    has.Rzz(10, 0);
+
+    int curr = 0;
+    For(u, m) {
+        cin >> c[u];
+
+        if(c[u] == 0) {
+            cin >> has[curr];
+            need[u][curr++] = 1;
+        } else {
+            For(j, c[u]) {
+                int v = nxt() - 1;
+                g[u].Pb(v);
+            }
+        }
+    }
+
 }
 
 int32_t main()

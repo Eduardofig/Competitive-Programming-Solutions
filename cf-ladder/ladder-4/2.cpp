@@ -20,9 +20,9 @@
 #define Has(x, y) ((x).find(y) != (x).end())
 
 // #define int ll
- 
+
 using namespace std;
- 
+
 using ll = long long;
 using ull = unsigned long long;
 using ii = pair<int, int>;
@@ -38,13 +38,13 @@ using vii = vector<ii>;
 using vvii = vector<vii>;
 using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
- 
+
 const int MXN = 5e5 + 100;
 const int INF = INT_MAX;
 
 const bool MULTIPLE_TESTCASES = 0;
 
-int n, m;
+int n, m, k;
 // vi a(MXN);
 // vi b(MXN);
 // vi v(MXN);
@@ -60,10 +60,57 @@ ll nxt()
 
 void solve()
 {
+    if(n == 1 && k > 0) {
+        Prn(-1);
+        return;
+    }
+
+
+    vi ans;
+
+    int x = k - (n / 2 - 1);
+
+    if(x < 1) {
+        Prn(-1);
+        return;
+    }
+
+    int printed = 0;
+    Pr(x);
+
+    printed++;
+    if(printed >= n) {
+        Prn("");
+        return;
+    }
+
+    Pr(2 * x);
+    printed++;
+
+
+    int curr = 1;
+
+    while(printed < n) {
+        while(curr == x || curr == 2 * x || curr + 1 == x || curr + 1 == 2 * x) {
+            curr += 2;
+        }
+
+        Pr(curr++);
+        printed++;
+
+        if(printed >= n) {
+            break;
+        }
+
+        Pr(curr++);
+        printed++;
+    }
+
 }
 
 void read()
 {
+    cin >> n >> k;
 }
 
 int32_t main()

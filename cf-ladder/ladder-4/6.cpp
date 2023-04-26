@@ -20,9 +20,9 @@
 #define Has(x, y) ((x).find(y) != (x).end())
 
 // #define int ll
- 
+
 using namespace std;
- 
+
 using ll = long long;
 using ull = unsigned long long;
 using ii = pair<int, int>;
@@ -38,8 +38,10 @@ using vii = vector<ii>;
 using vvii = vector<vii>;
 using vvvi = vector<vvi>;
 using vvvii = vector<vvii>;
- 
-const int MXN = 5e5 + 100;
+using vb = vector<bool>;
+using vvb = vector<vb>;
+
+const int MXN = 3e6 + 100;
 const int INF = INT_MAX;
 
 const bool MULTIPLE_TESTCASES = 0;
@@ -51,6 +53,9 @@ int n, m;
 // vvi g(MXN, vi());
 // string s;
 
+vi cnt(MXN, 0);
+vi w;
+
 ll nxt()
 {
     ll x;
@@ -60,10 +65,24 @@ ll nxt()
 
 void solve()
 {
+    sort(All(w));
+
+    for(int i: w) {
+        cnt[i]++;
+    }
+
+    For(i, MXN - 1) {
+        cnt[i + 1] += cnt[i] / 2;
+        cnt[i] %= 2;
+    }
+
+    Prn(accumulate(All(cnt), 0));
 }
 
 void read()
 {
+    w.Rz(nxt());
+    Read(w);
 }
 
 int32_t main()
